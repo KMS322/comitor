@@ -1,6 +1,9 @@
 import "./App.css";
 import "./CSS/fonts.css";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
+import { LOAD_MY_INFO_REQUEST } from "./reducers/user";
 import Header from "./Page/header";
 import Footer from "./Page/footer";
 import MainContents from "./Page/main/mainContents";
@@ -14,9 +17,22 @@ import CartContents from "./Page/cart/cartContents";
 import PayContents from "./Page/pay/payContents";
 import PayCompleteContent from "./Page/payComplete/payCompleteContent";
 import ShopDetailContents from "./Page/shopDetail/shopDetailContents";
+import AdminMain from "./AdminPage/adminMain.js";
+import AdminLogin from "./AdminPage/adminLogin.js";
+import AdminSignup from "./AdminPage/adminSignup.js";
+import AdminLists from "./AdminPage/adminLists.js";
+import AdminPopup from "./AdminPage/adminPopup.js";
 import ScrollToTop from "./ScrollToTop";
 
 const App = () => {
+  const dispatch = useDispatch();
+  const { me, logInDone } = useSelector((state) => state.user);
+  console.log("App 내에서 me : ", me);
+  useEffect(() => {
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+  }, [logInDone]);
   return (
     <>
       <Header />
@@ -33,6 +49,12 @@ const App = () => {
         <Route path="/pay" element={<PayContents />} />
         <Route path="/complete" element={<PayCompleteContent />} />
         <Route path="/shopDetail/:id" element={<ShopDetailContents />} />
+
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/adminSignup" element={<AdminSignup />} />
+        <Route path="/adminMain" element={<AdminMain />} />
+        <Route path="/adminLists" element={<AdminLists />} />
+        <Route path="/adminPopup" element={<AdminPopup />} />
       </Routes>
       <Footer />
     </>

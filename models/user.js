@@ -13,23 +13,27 @@ module.exports = (sequelize, DataTypes) => {
       },
       user_name: {
         type: DataTypes.STRING(10),
-        allowNull: false,
+        allowNull: true,
       },
       user_phone: {
         type: DataTypes.STRING(20),
-        allowNull: false,
+        allowNull: true,
       },
-      user_address_jibun: {
+      user_jibunAddress: {
         type: DataTypes.STRING(50),
-        allowNull: false,
+        allowNull: true,
       },
-      user_address_detail: {
+      user_detailAddress: {
         type: DataTypes.STRING(50),
-        allowNull: false,
+        allowNull: true,
       },
-      user_address_road: {
+      user_roadAddress: {
         type: DataTypes.STRING(50),
-        allowNull: false,
+        allowNull: true,
+      },
+      user_postcode: {
+        type: DataTypes.STRING(10),
+        allowNull: true,
       },
     },
     {

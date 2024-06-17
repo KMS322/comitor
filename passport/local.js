@@ -12,9 +12,8 @@ module.exports = () => {
       },
       async (req, user_id, user_pw, done) => {
         try {
-          const { userType } = req.body;
           const user = await User.findOne({
-            where: { user_id, userType },
+            where: { user_id },
           });
           if (!user) {
             return done(null, false, { reason: "존재하지 않는 사용자입니다." });

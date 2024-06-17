@@ -9,6 +9,7 @@ import "../../CSS/signForm_mobile.css";
 
 const SignFormContent = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { signUpDone, signUpError, checkIdDone, checkIdError } = useSelector(
     (state) => state.user
   );
@@ -22,15 +23,14 @@ const SignFormContent = () => {
   const [user_phone, onChangePhone] = useInput("");
   const [user_jibunAddress, setJibunAddress] = useState("");
   const [user_roadAddress, setRoadAddress] = useState("");
+  const [user_postcode, setPostcode] = useState("");
   const [user_detailAddress, onChangeDetailAddress] = useInput("");
   const [addressObj, setAddressObj] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
   const checkId = useCallback(
     (e) => {
-      console.log("user_id : ", user_id);
       e.preventDefault();
-
       dispatch({
         type: CHECK_ID_REQUEST,
         data: {
@@ -38,14 +38,22 @@ const SignFormContent = () => {
         },
       });
     },
-    [user_id]
+    [user_id, idChecked]
   );
+
   useEffect(() => {
     if (checkIdDone) {
-      alert("사용 가능한 아이디 입니다.");
+      alert("사용 가능한 아이디입니다.");
       setIdChecked(user_id);
     }
   }, [checkIdDone]);
+  useEffect(() => {
+    if (checkIdError) {
+      alert("사용하실 수 없는 아이디입니다.");
+      setIdChecked(false);
+    }
+  }, [checkIdError]);
+
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordCheck(e.target.value);
@@ -53,6 +61,7 @@ const SignFormContent = () => {
     },
     [passwordCheck]
   );
+
   const handleComplete = (data) => {
     setJibunAddress(data.jibunAddress);
     if (!data.jibunAddress) {
@@ -62,6 +71,7 @@ const SignFormContent = () => {
     if (!data.roadAddress) {
       setRoadAddress(data.address);
     }
+    setPostcode(data.zonecode);
     if (data.addressType === "R") {
       setAddressObj(data.jibunAddress);
       if (!data.jibunAddress) {
@@ -69,9 +79,11 @@ const SignFormContent = () => {
       }
     }
   };
+
   const handleClick = () => {
     setModalOpen(!modalOpen);
   };
+
   useEffect(() => {
     setJibunAddress(user_jibunAddress);
   }, [addressObj]);
@@ -87,10 +99,11 @@ const SignFormContent = () => {
             user_id,
             user_pw,
             user_name,
-            user_jibunAddress,
-            user_detailAddress,
-            user_roadAddress,
             user_phone,
+            user_jibunAddress,
+            user_roadAddress,
+            user_postcode,
+            user_detailAddress,
           },
         });
       } else {
@@ -101,12 +114,19 @@ const SignFormContent = () => {
       user_id,
       user_pw,
       user_name,
-      user_jibunAddress,
-      user_detailAddress,
-      user_roadAddress,
       user_phone,
+      user_jibunAddress,
+      user_roadAddress,
+      user_postcode,
+      user_detailAddress,
     ]
   );
+
+  useEffect(() => {
+    if (signUpDone) {
+      navigate("/");
+    }
+  }, [signUpDone]);
 
   return (
     <div className="signForm_s1">
@@ -121,7 +141,8 @@ const SignFormContent = () => {
               <p>아이디(이메일 형식)</p>
               <div className="btn_box">
                 <input
-                  type="email"
+                  type="text"
+                  // type="email"
                   name="user_id"
                   value={user_id}
                   onChange={onChangeId}
@@ -131,7 +152,7 @@ const SignFormContent = () => {
                   style={{ backgroundColor: idChecked ? "#000035" : "#919191" }}
                   onClick={checkId}
                 >
-                  중복 확인
+                  {idChecked ? "확인 완료" : "중복 확인"}
                 </div>
               </div>
             </div>
@@ -146,7 +167,10 @@ const SignFormContent = () => {
                 onChange={onChangePw}
               />
             </div>
-            <div className="input">
+            <div
+              className="input"
+              style={{ marginBottom: passwordError ? "0vw" : "1.72vw" }}
+            >
               <p>비밀번호 확인</p>
               <input
                 type="password"
@@ -155,6 +179,11 @@ const SignFormContent = () => {
                 onChange={onChangePasswordCheck}
               />
             </div>
+            {passwordError && (
+              <div style={{ color: "red", marginBottom: "1.72vw" }}>
+                비밀번호가 일치하지 않습니다.
+              </div>
+            )}
             <div className="input">
               <p>이름</p>
               <input

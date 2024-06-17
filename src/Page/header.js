@@ -1,14 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_MY_INFO_REQUEST, LOG_OUT_REQUEST } from "../reducers/user";
 import "../CSS/header.css";
 import "../CSS/header_mobile.css";
 import { useNavigate } from "react-router-dom";
 const Header = () => {
+  const dispatch = useDispatch();
   const [menuState, setMenuState] = useState(false);
   const navigate = useNavigate();
   const goPage = (path) => {
     navigate(path);
   };
+  const { me, logOutDone } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (!me && logOutDone) {
+      window.location.href = "/";
+    }
+  }, [me, logOutDone]);
 
+  const logOut = useCallback(() => {
+    if (!me) {
+      goPage("/logIn");
+    } else {
+      dispatch({
+        type: LOG_OUT_REQUEST,
+      });
+    }
+  }, [me, navigate, dispatch]);
+  console.log("me : ", me);
   return (
     <div className="header_container">
       <div className="header_left">
@@ -59,13 +78,17 @@ const Header = () => {
         </div>
         <div className="article">
           <img src={"/images/header_icon_login.png"} alt="" />
-          <p
-            onClick={() => {
-              goPage("/login");
-            }}
-          >
-            로그인
-          </p>
+          {me ? (
+            <p onClick={logOut}>로그아웃</p>
+          ) : (
+            <p
+              onClick={() => {
+                goPage("/login");
+              }}
+            >
+              로그인
+            </p>
+          )}
         </div>
       </div>
       <img
@@ -80,7 +103,7 @@ const Header = () => {
           setMenuState(!menuState);
         }}
       />
-      <div
+      {/* <div
         id="mobile"
         className="header_menu"
         style={{ display: !menuState ? "none" : "block" }}
@@ -111,7 +134,7 @@ const Header = () => {
             로그인
           </p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

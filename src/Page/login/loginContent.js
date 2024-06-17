@@ -1,13 +1,39 @@
+import React, { useCallback, useState, useEffect } from "react";
+import useInput from "../hooks/useInput";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { LOG_IN_REQUEST } from "../../reducers/user";
 import "../../CSS/login.css";
 import "../../CSS/login_mobile.css";
 
 const LoginContent = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { logInDone, logInError } = useSelector((state) => state.user);
 
-  const goPage = (path) => {
-    navigate(path);
-  };
+  const [user_id, onChangeId] = useInput("");
+  const [user_pw, onChangePw] = useInput("");
+
+  useEffect(() => {
+    if (logInDone) {
+      navigate("/");
+    }
+  }, [logInDone]);
+
+  const onSubmitForm = useCallback(
+    (e) => {
+      e.preventDefault();
+
+      dispatch({
+        type: LOG_IN_REQUEST,
+        data: {
+          user_id,
+          user_pw,
+        },
+      });
+    },
+    [user_id, user_pw]
+  );
   return (
     <div className="login_s1">
       <div className="section_container">
@@ -17,9 +43,23 @@ const LoginContent = () => {
             <p>로그인</p>
           </div>
           <div className="input_box">
-            <input placeholder="아이디" />
-            <input placeholder="비밀번호" />
-            <div className="submit_btn">로그인</div>
+            <input
+              placeholder="아이디"
+              type="text"
+              name="user_id"
+              value={user_id}
+              onChange={onChangeId}
+            />
+            <input
+              placeholder="비밀번호"
+              type="password"
+              name="user_pw"
+              value={user_pw}
+              onChange={onChangePw}
+            />
+            <div className="submit_btn" onClick={onSubmitForm}>
+              로그인
+            </div>
           </div>
           <div className="sub_box">
             <div className="auto_login_box">
@@ -34,7 +74,7 @@ const LoginContent = () => {
           <div
             className="signin_btn"
             onClick={() => {
-              goPage("/signin");
+              navigate("/signin");
             }}
           >
             회원가입

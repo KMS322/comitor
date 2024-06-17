@@ -1,28 +1,19 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const { User, UserResume, UserCareer, UserIndividual } = require("../models");
+const { User } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
+    console.log("req.user : ", req.user);
     if (req.user) {
       const fullUserWithoutPassword = await User.findOne({
         where: { id: req.user.id },
         attributes: {
           exclude: ["user_pw"],
         },
-        // include: [
-        //   {
-        //     model: UserResume,
-        //     attributes: ["id"],
-        //   },
-        //   {
-        //     model: UserCareer,
-        //     attributes: ["id"],
-        //   },
-        // ],
       });
       res.status(200).json(fullUserWithoutPassword);
     } else {
@@ -53,16 +44,6 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
         attributes: {
           exclude: ["user_pw"],
         },
-        include: [
-          {
-            model: UserResume,
-            attributes: ["id"],
-          },
-          {
-            model: UserCareer,
-            attributes: ["id"],
-          },
-        ],
       });
       return res.status(200).json(fullUserWithoutPassword);
     });
@@ -80,31 +61,25 @@ router.post("/signup", isNotLoggedIn, async (req, res, next) => {
   try {
     const exUser = await User.findOne({
       where: {
-        user_member_id: req.body.user_member_id,
+        user_id: req.body.user_id,
       },
     });
     if (exUser) {
       return res.status(403).send("이미 사용중인 아이디 입니다.");
     }
-    const hashedPassword = await bcrypt.hash(req.body.user_member_pw, 12);
+    const hashedPassword = await bcrypt.hash(req.body.user_pw, 12);
 
     const createdUser = await User.create({
-      userType: req.body.userType,
-      user_member_id: req.body.user_member_id,
-      user_member_pw: hashedPassword,
+      user_id: req.body.user_id,
+      user_pw: hashedPassword,
+      user_name: req.body.user_name,
+      user_phone: req.body.user_phone,
+      user_jibunAddress: req.body.user_jibunAddress,
+      user_roadAddress: req.body.user_roadAddress,
+      user_postcode: req.body.user_postcode,
+      user_detailAddress: req.body.user_detailAddress,
     });
-    if (req.body.userType === "individual") {
-      await UserIndividual.create({
-        user_member_name: req.body.user_member_name,
-        user_member_num: req.body.user_member_num,
-        user_member_jibunAddress: req.body.user_member_jibunAddress,
-        user_member_detailAddress: req.body.user_member_detailAddress,
-        user_member_roadAddress: req.body.user_member_roadAddress,
-        user_member_tel: req.body.user_member_tel,
-        user_member_email: req.body.user_member_email,
-        IndividualId: createdUser.id,
-      });
-    }
+
     res.status(201).send("ok");
   } catch (error) {
     console.error(error);
@@ -114,7 +89,7 @@ router.post("/signup", isNotLoggedIn, async (req, res, next) => {
 
 router.post("/checkId", isNotLoggedIn, async (req, res, next) => {
   try {
-    if (req.body.user_member_id) {
+    if (req.body.user_id) {
       const sameIdUser = await User.findOne({
         where: {
           user_id: req.body.user_id,
