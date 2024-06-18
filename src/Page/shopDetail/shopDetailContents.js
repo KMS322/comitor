@@ -4,10 +4,10 @@ import ShopDetailS2 from "./shopDetailS2";
 import ShopDetailS3 from "./shopDetailS3";
 import ShopDetailS4 from "./shopDetailS4";
 const ShopDetailContents = () => {
-  const { id } = useParams();
+  const { code } = useParams();
   return (
     <>
-      <ShopDetailS1 productId={id} />
+      <ShopDetailS1 productCode={code} />
       <ShopDetailS2 />
       <ShopDetailS3 />
       <ShopDetailS4 />

@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    console.log("req.user : ", req.user);
     if (req.user) {
       const fullUserWithoutPassword = await User.findOne({
         where: { id: req.user.id },
@@ -27,6 +26,7 @@ router.get("/", async (req, res, next) => {
 
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
+    console.log("req.user : ", req.user);
     if (err) {
       console.error(err);
       return next(err);

@@ -6,6 +6,7 @@ const passport = require("passport");
 const dotenv = require("dotenv");
 const userRouter = require("./routes/user");
 const adminProductRouter = require("./routes/adminProduct");
+const cartRouter = require("./routes/cart");
 // const listRouter = require("./routes/list");
 // const contactRouter = require("./routes/contact");
 // const dummyRouter = require("./routes/dummy");
@@ -60,6 +61,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRouter);
 app.use("/adminProduct", adminProductRouter);
+app.use("/cart", cartRouter);
 // app.use("/list", listRouter);
 // app.use("/contact", contactRouter);
 // app.use("/dummy", dummyRouter);

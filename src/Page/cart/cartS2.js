@@ -1,77 +1,136 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_CART_REQUEST } from "../../reducers/cart";
+import { LOAD_PRODUCT_REQUEST } from "../../reducers/adminProduct";
 import "../../CSS/cart.css";
 import "../../CSS/cart_mobile.css";
 const CartS2 = () => {
+  const dispatch = useDispatch();
+  const { me } = useSelector((state) => state.user);
+  const { carts } = useSelector((state) => state.cart);
+  const { products } = useSelector((state) => state.adminProduct);
+  const [uniquecarts, setUniquecarts] = useState([]);
+  const [uniqueProducts, setUniqueProducts] = useState([]);
+  const [nowCarts, setNowCarts] = useState([]);
+  console.log("uniquecarts : ", uniquecarts);
+  console.log("uniqueProducts : ", uniqueProducts);
   const navigate = useNavigate();
   const goPage = (path) => {
     navigate(path);
   };
-  const location = useLocation();
-  const { product = {}, selectedCnt = 0 } = location.state || {};
-  const [cartProducts, setCartProducts] = useState([
-    {
-      id: 1,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제`,
-      name_mobile: `코미토르 밸런스 펫 세럼 강아지 발습진 발사탕 피부병 보습제`,
-      imageUrl: "/images/product/product_img1.jpg",
-      price: 17900,
-      originPrice: 26000,
-      cnt: 1,
-      checked: true,
-    },
-    {
-      id: 2,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제 2개`,
-      name_mobile: `코미토르 밸런스 펫 세럼 강아지 발습진 발사탕 피부병 보습제 2개`,
-      imageUrl: "/images/product/product_img2.jpg",
-      price: 34900,
-      originPrice: 52000,
-      cnt: 1,
-      checked: true,
-    },
-  ]);
-  useEffect(() => {
-    setCartProducts((prevCartProducts) => {
-      if (selectedCnt > 0) {
-        const updatedProduct = { ...product, cnt: selectedCnt };
-        updatedProduct.id = prevCartProducts.length + 1;
-        return [...prevCartProducts, updatedProduct];
-      }
-      return [...prevCartProducts];
-    });
-  }, [product, selectedCnt]);
 
-  const cancelProduct = (productID) => {
-    const updatedCartProducts = cartProducts.filter(
-      (product) => product.id !== productID
+  useEffect(() => {
+    const user = me.id;
+    dispatch({
+      type: LOAD_CART_REQUEST,
+      data: { user },
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    const removeDuplicatesById = (lists) => {
+      if (!lists || !Array.isArray(lists)) {
+        return [];
+      }
+      const uniqueLists = [];
+      const existingIds = [];
+
+      for (const list of lists) {
+        if (list && list.id && !existingIds.includes(list.id)) {
+          uniqueLists.push(list);
+          existingIds.push(list.id);
+        }
+      }
+
+      return uniqueLists;
+    };
+
+    setUniquecarts(removeDuplicatesById(carts));
+  }, [carts]);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_PRODUCT_REQUEST,
+    });
+  }, [dispatch]);
+  useEffect(() => {
+    const removeDuplicatesById = (lists) => {
+      if (!lists || !Array.isArray(lists)) {
+        return [];
+      }
+      const uniqueLists = [];
+      const existingIds = [];
+
+      for (const list of lists) {
+        if (
+          list &&
+          list.product_code &&
+          !existingIds.includes(list.product_code)
+        ) {
+          uniqueLists.push(list);
+          existingIds.push(list.product_code);
+        }
+      }
+
+      return uniqueLists;
+    };
+
+    setUniqueProducts(removeDuplicatesById(products));
+  }, [products]);
+  useEffect(() => {
+    const updatedCarts = uniquecarts.map((cart) => ({
+      ...cart,
+      checked: true,
+    }));
+    setNowCarts(updatedCarts);
+  }, [uniquecarts]);
+  // useEffect(() => {
+  //   setCartProducts((prevCartProducts) => {
+  //     if (selectedCnt > 0) {
+  //       const updatedProduct = { ...product, cnt: selectedCnt };
+  //       updatedProduct.id = prevCartProducts.length + 1;
+  //       return [...prevCartProducts, updatedProduct];
+  //     }
+  //     return [...prevCartProducts];
+  //   });
+  // }, [product, selectedCnt]);
+
+  const cancelProduct = (productCode) => {
+    setUniquecarts((prevUniquecarts) =>
+      prevUniquecarts.filter((cart) => cart.product_code !== productCode)
     );
-    setCartProducts(updatedCartProducts);
   };
 
-  const totalAmount = cartProducts.reduce((acc, product) => {
-    return acc + product.price * product.cnt;
+  const totalAmount = uniquecarts.reduce((acc, cart) => {
+    const selectedProduct = uniqueProducts.find(
+      (item) => item.product_code === cart.product_code
+    );
+    return (
+      acc + (selectedProduct ? selectedProduct.product_salePrice * cart.cnt : 0)
+    );
   }, 0);
 
-  const toggleChecked = (productId) => {
-    setCartProducts((prevCartProducts) => {
-      return prevCartProducts.map((product) => {
-        if (product.id === productId) {
-          return { ...product, checked: !product.checked };
+  const toggleChecked = (cartId) => {
+    setNowCarts((prevNowCarts) =>
+      prevNowCarts.map((cart) => {
+        if (cart.id === cartId) {
+          return { ...cart, checked: !cart.checked };
         }
-        return product;
-      });
-    });
+        return cart;
+      })
+    );
   };
 
   const toggleAllChecked = () => {
-    setCartProducts((prevCartProducts) => {
-      const allChecked = prevCartProducts.every((product) => product.checked);
-      return prevCartProducts.map((product) => ({
-        ...product,
-        checked: !allChecked,
-      }));
-    });
+    const allChecked = nowCarts.every((cart) => cart.checked);
+
+    const updatedCarts = nowCarts.map((cart) => ({
+      ...cart,
+      checked: !allChecked,
+    }));
+
+    setNowCarts(updatedCarts);
   };
 
   return (
@@ -81,7 +140,7 @@ const CartS2 = () => {
           <div className="title">
             <img
               src={
-                cartProducts.every((product) => product.checked)
+                nowCarts.every((product) => product.checked)
                   ? "/images/mypage/check_full.png"
                   : "/images/mypage/check_empty.png"
               }
@@ -95,51 +154,74 @@ const CartS2 = () => {
             <p>배송 형태/배송비</p>
             <p></p>
           </div>
-          {cartProducts.map((cartProduct, index) => {
+          {nowCarts.map((cart) => {
+            const selectedProduct = uniqueProducts.find(
+              (item) => item.product_code === cart.product_code
+            );
+            if (!selectedProduct) return null;
             return (
-              <div className="content">
+              <div className="content" key={cart.product_code}>
                 <img
                   src={
-                    cartProduct.checked
+                    cart.checked
                       ? "/images/mypage/check_full.png"
                       : "/images/mypage/check_empty.png"
                   }
                   alt=""
-                  onClick={() => toggleChecked(cartProduct.id)}
+                  onClick={() => toggleChecked(cart.id)}
                 />
                 <div className="item_box">
-                  <img src={cartProduct.imageUrl} alt="" />
-                  <p dangerouslySetInnerHTML={{ __html: cartProduct.name }}></p>
+                  <img
+                    src={`/images/mainImage/${selectedProduct.product_imgUrl}`}
+                    alt=""
+                  />
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: selectedProduct.product_name,
+                    }}
+                  ></p>
                 </div>
                 <div className="price_box">
-                  <p>{cartProduct.originPrice.toLocaleString()}원</p>
-                  <p>{cartProduct.price.toLocaleString()}원</p>
+                  <p>
+                    {selectedProduct.product_originPrice.toLocaleString()}원
+                  </p>
+                  <p>{selectedProduct.product_salePrice.toLocaleString()}원</p>
                 </div>
                 <div className="count_box">
                   <div
                     onClick={() => {
-                      if (cartProduct.cnt > 1) {
-                        const updatedCartProducts = [...cartProducts];
-                        updatedCartProducts[index].cnt--;
-                        setCartProducts(updatedCartProducts);
-                      }
+                      setNowCarts((prevNowCarts) =>
+                        prevNowCarts.map((cart) =>
+                          cart.product_code === cart.product_code &&
+                          cart.product_cnt > 1
+                            ? { ...cart, product_cnt: cart.product_cnt - 1 }
+                            : cart
+                        )
+                      );
                     }}
                   >
                     <img src="/images/product/minus_icon.png" alt="" />
                   </div>
-                  <div>{cartProduct.cnt}</div>
+                  <div>{cart.product_cnt}</div>
                   <div
                     onClick={() => {
-                      const updatedCartProducts = [...cartProducts];
-                      updatedCartProducts[index].cnt++;
-                      setCartProducts(updatedCartProducts);
+                      setNowCarts((prevNowCarts) =>
+                        prevNowCarts.map((cart) =>
+                          cart.product_code === cart.product_code
+                            ? { ...cart, product_cnt: cart.product_cnt + 1 }
+                            : cart
+                        )
+                      );
                     }}
                   >
                     <img src="/images/product/plus_icon.png" alt="" />
                   </div>
                 </div>
                 <p>
-                  {(cartProduct.price * cartProduct.cnt).toLocaleString()}원
+                  {(
+                    selectedProduct.product_salePrice * cart.product_cnt
+                  ).toLocaleString()}
+                  원
                 </p>
                 <div className="delivery_box">
                   <p>택배배송</p>
@@ -149,13 +231,18 @@ const CartS2 = () => {
                   <div
                     onClick={() => {
                       navigate("/pay", {
-                        state: { cartProducts, id: cartProduct.id },
+                        state: {
+                          cartProducts: uniquecarts,
+                          id: cart.product_code,
+                        },
                       });
                     }}
                   >
                     결제하기
                   </div>
-                  <div onClick={() => cancelProduct(cartProduct.id)}>취소</div>
+                  <div onClick={() => cancelProduct(cart.product_code)}>
+                    취소
+                  </div>
                 </div>
               </div>
             );
@@ -169,7 +256,7 @@ const CartS2 = () => {
           <div
             className="btn"
             onClick={() => {
-              goPage("/shop");
+              navigate("/shop");
             }}
           >
             더 담으러 가기
@@ -177,7 +264,7 @@ const CartS2 = () => {
           <div
             className="btn"
             onClick={() => {
-              navigate("/pay", { state: { cartProducts, id: 0 } });
+              navigate("/pay", { state: { cartProducts: uniquecarts, id: 0 } });
             }}
           >
             결제하기
@@ -196,53 +283,80 @@ const CartS2 = () => {
           </div>
           <p>수량</p>
         </div>
-        {cartProducts.map((cartProduct, index) => {
+        {uniquecarts.map((cart) => {
+          const selectedProduct = uniqueProducts.find(
+            (item) => item.product_code === cart.product_code
+          );
+          if (!selectedProduct) return null;
           return (
-            <>
+            <React.Fragment key={cart.product_code}>
               <div className="row_name">
-                <img src="/images/mypage/check_box_full.png" alt="" />
-                <p>{cartProduct.name_mobile}</p>
+                <img
+                  src={
+                    cart.checked
+                      ? "/images/mypage/check_box_full.png"
+                      : "/images/mypage/check_box_empty.png"
+                  }
+                  alt=""
+                  onClick={() => toggleChecked(cart.id)}
+                />
+                <p>{selectedProduct.product_name}</p>
               </div>
               <div className="row_content">
-                <img src={cartProduct.imageUrl} alt="" />
+                <img
+                  src={`/images/mainImage/${selectedProduct.product_imgUrl}`}
+                  alt=""
+                />
                 <div className="price_box">
-                  <p>{cartProduct.originPrice.toLocaleString()}원</p>
-                  <p>{cartProduct.price.toLocaleString()}원</p>
+                  <p>
+                    {selectedProduct.product_originPrice.toLocaleString()}원
+                  </p>
+                  <p>{selectedProduct.product_salePrice.toLocaleString()}원</p>
                 </div>
                 <div className="delivery_box">
                   <p>
-                    {(cartProduct.price * cartProduct.cnt).toLocaleString()}원
+                    {(
+                      selectedProduct.product_salePrice * cart.cnt
+                    ).toLocaleString()}
+                    원
                   </p>
                   <p>택배배송/배송비무료</p>
                 </div>
                 <div className="count_box">
                   <div
                     onClick={() => {
-                      if (cartProduct.cnt > 1) {
-                        const updatedCartProducts = [...cartProducts];
-                        updatedCartProducts[index].cnt--;
-                        setCartProducts(updatedCartProducts);
+                      if (cart.cnt > 1) {
+                        setUniquecarts((prevUniquecarts) =>
+                          prevUniquecarts.map((c) =>
+                            c.product_code === cart.product_code
+                              ? { ...c, cnt: c.cnt - 1 }
+                              : c
+                          )
+                        );
                       }
                     }}
                   >
                     <img src="/images/product/minus_icon.png" alt="" />
                   </div>
-                  <div>{cartProduct.cnt}</div>
+                  <div>{cart.cnt}</div>
                   <div
                     onClick={() => {
-                      const updatedCartProducts = [...cartProducts];
-                      updatedCartProducts[index].cnt++;
-                      setCartProducts(updatedCartProducts);
+                      setUniquecarts((prevUniquecarts) =>
+                        prevUniquecarts.map((c) =>
+                          c.product_code === cart.product_code
+                            ? { ...c, cnt: c.cnt + 1 }
+                            : c
+                        )
+                      );
                     }}
                   >
                     <img src="/images/product/plus_icon.png" alt="" />
                   </div>
                 </div>
               </div>
-            </>
+            </React.Fragment>
           );
         })}
-
         <div className="pay_btn">
           총 {totalAmount.toLocaleString()}원 결제하기
         </div>

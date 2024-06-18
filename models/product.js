@@ -2,13 +2,13 @@ module.exports = (sequelize, DataTypes) => {
   const Product = sequelize.define(
     "Product",
     {
-      product_id: {
-        type: DataTypes.STRING(10),
+      product_code: {
+        type: DataTypes.STRING(30),
         allowNull: false,
         unique: true,
       },
       product_name: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       product_originPrice: {

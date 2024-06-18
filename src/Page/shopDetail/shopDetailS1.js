@@ -1,41 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_PRODUCT_REQUEST } from "../../reducers/adminProduct";
+import { ADD_CART_REQUEST } from "../../reducers/cart";
 import "../../CSS/shopDetail.css";
 import "../../CSS/shopDetail_mobile.css";
-const ShopDetailS1 = ({ productId }) => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제`,
-      imageUrl: "/images/product/product_img1.jpg",
-      price: 17900,
-      originPrice: 26000,
-    },
-    {
-      id: 2,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제 2개`,
-      imageUrl: "/images/product/product_img2.jpg",
-      price: 34900,
-      originPrice: 52000,
-    },
-    {
-      id: 3,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제`,
-      imageUrl: "/images/product/product_img3.jpg",
-      price: 17900,
-      originPrice: 26000,
-    },
-  ]);
-  if (products === null) {
-    setProducts({
-      id: 1,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제`,
-      imageUrl: "/images/product/product_img1.jpg",
-      price: 17900,
-      originPrice: 26000,
+import Modal from "../modal";
+const ShopDetailS1 = ({ productCode }) => {
+  const dispatch = useDispatch();
+
+  const { products } = useSelector((state) => state.adminProduct);
+  const { me } = useSelector((state) => state.user);
+  const [uniqueProducts, setUniqueProducts] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  useEffect(() => {
+    dispatch({
+      type: LOAD_PRODUCT_REQUEST,
     });
-  }
-  const product = products.find((item) => item.id === Number(productId));
+  }, [dispatch]);
+  useEffect(() => {
+    const removeDuplicatesById = (lists) => {
+      if (!lists || !Array.isArray(lists)) {
+        return [];
+      }
+      const uniqueLists = [];
+      const existingIds = [];
+
+      for (const list of lists) {
+        if (
+          list &&
+          list.product_code &&
+          !existingIds.includes(list.product_code)
+        ) {
+          uniqueLists.push(list);
+          existingIds.push(list.product_code);
+        }
+      }
+
+      return uniqueLists;
+    };
+
+    setUniqueProducts(removeDuplicatesById(products));
+  }, [products]);
+
+  const selectedProduct = uniqueProducts.find(
+    (item) => Number(item.product_code) === Number(productCode)
+  );
 
   const [selectedCnt, setSelectedCnt] = useState(1);
   const [liked, setLiked] = useState(false);
@@ -60,19 +70,47 @@ const ShopDetailS1 = ({ productId }) => {
     };
   };
   const { nextDate, nextDayOfWeek } = calculateNextDateAndDay();
+
+  if (!selectedProduct) {
+    return (
+      <div className="shopDetail_s1">
+        <div className="section_container">
+          <p>상품을 찾을 수 없습니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const addCart = (code) => {
+    const user = me.id;
+    console.log("code : ", code);
+    console.log("user : ", user);
+    console.log("selectedCnt : ", selectedCnt);
+    dispatch({
+      type: ADD_CART_REQUEST,
+      data: { code, user, selectedCnt },
+    });
+  };
   return (
     <div className="shopDetail_s1">
       <div className="section_container">
-        <img src={product.imageUrl} alt="" />
+        <img
+          src={`/images/mainImage/${selectedProduct.product_imgUrl}`}
+          alt=""
+        />
         <div className="article">
           <p>BEST</p>
-          <p dangerouslySetInnerHTML={{ __html: product.name }}></p>
+          <p
+            dangerouslySetInnerHTML={{ __html: selectedProduct.product_name }}
+          ></p>
           <p>{`${
             nextDate.getMonth() + 1
           }/${nextDate.getDate()}(${nextDayOfWeek}) 도착예정`}</p>
           <p>
-            <span>{product.originPrice.toLocaleString()}원</span>
-            {product.price.toLocaleString()}원
+            <span>
+              {selectedProduct.product_originPrice.toLocaleString()}원
+            </span>
+            {selectedProduct.product_salePrice.toLocaleString()}원
           </p>
           <div className="count_box">
             <p>수량</p>
@@ -99,14 +137,15 @@ const ShopDetailS1 = ({ productId }) => {
           <div className="line"></div>
           <p id="pc">
             <span>총 상품 금액(수량)</span>
-            {(product.price * selectedCnt).toLocaleString()}
+            {(selectedProduct.product_salePrice * selectedCnt).toLocaleString()}
             <span>({selectedCnt}개)</span>
           </p>
           <div className="btn_box">
             <div
               className="btn"
               onClick={() => {
-                navigate("/cart", { state: { product, selectedCnt } });
+                setModalOpen(true);
+                addCart(selectedProduct.product_code);
               }}
             >
               장바구니
@@ -138,13 +177,18 @@ const ShopDetailS1 = ({ productId }) => {
           </div>
           <div id="mobile" className="total_price">
             <p>총 상품 금액(수량)</p>
-            <p>{(product.price * selectedCnt).toLocaleString()}</p>
+            <p>
+              {(
+                selectedProduct.product_salePrice.price * selectedCnt
+              ).toLocaleString()}
+            </p>
           </div>
           <p id="mobile" className="total_count">
             (1개)
           </p>
         </div>
       </div>
+      {modalOpen && <Modal setModalOpen={setModalOpen} />}
     </div>
   );
 };

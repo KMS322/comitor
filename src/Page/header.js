@@ -27,7 +27,6 @@ const Header = () => {
       });
     }
   }, [me, navigate, dispatch]);
-  console.log("me : ", me);
   return (
     <div className="header_container">
       <div className="header_left">

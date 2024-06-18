@@ -23,7 +23,6 @@ const LoginContent = () => {
   const onSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
-
       dispatch({
         type: LOG_IN_REQUEST,
         data: {

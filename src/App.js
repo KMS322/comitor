@@ -27,7 +27,6 @@ import ScrollToTop from "./ScrollToTop";
 const App = () => {
   const dispatch = useDispatch();
   const { me, logInDone } = useSelector((state) => state.user);
-  console.log("App 내에서 me : ", me);
   useEffect(() => {
     dispatch({
       type: LOAD_MY_INFO_REQUEST,
@@ -48,13 +47,13 @@ const App = () => {
         <Route path="/cart" element={<CartContents />} />
         <Route path="/pay" element={<PayContents />} />
         <Route path="/complete" element={<PayCompleteContent />} />
-        <Route path="/shopDetail/:id" element={<ShopDetailContents />} />
+        <Route path="/shopDetail/:code" element={<ShopDetailContents />} />
 
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/adminSignup" element={<AdminSignup />} />
         <Route path="/adminMain" element={<AdminMain />} />
         <Route path="/adminLists" element={<AdminLists />} />
-        <Route path="/adminPopup" element={<AdminPopup />} />
+        {/* <Route path="/adminPopup" element={<AdminPopup />} /> */}
       </Routes>
       <Footer />
     </>
