@@ -13,8 +13,8 @@ const CartS2 = () => {
   const [uniquecarts, setUniquecarts] = useState([]);
   const [uniqueProducts, setUniqueProducts] = useState([]);
   const [nowCarts, setNowCarts] = useState([]);
-  console.log("uniquecarts : ", uniquecarts);
-  console.log("uniqueProducts : ", uniqueProducts);
+  const [totalPrice, setTotalPrice] = useState(0);
+
   const navigate = useNavigate();
   const goPage = (path) => {
     navigate(path);
@@ -102,15 +102,6 @@ const CartS2 = () => {
     );
   };
 
-  const totalAmount = uniquecarts.reduce((acc, cart) => {
-    const selectedProduct = uniqueProducts.find(
-      (item) => item.product_code === cart.product_code
-    );
-    return (
-      acc + (selectedProduct ? selectedProduct.product_salePrice * cart.cnt : 0)
-    );
-  }, 0);
-
   const toggleChecked = (cartId) => {
     setNowCarts((prevNowCarts) =>
       prevNowCarts.map((cart) => {
@@ -132,6 +123,24 @@ const CartS2 = () => {
 
     setNowCarts(updatedCarts);
   };
+
+  useEffect(() => {
+    let total = 0;
+    nowCarts.map((cart, index) => {
+      if (cart.checked) {
+        const product = uniqueProducts.find(
+          (item) => item.product_code === cart.product_code
+        );
+        total += product.product_salePrice * cart.product_cnt;
+        console.log("product.product_salePrice : ", product.product_salePrice);
+      }
+      console.log("index : ", index);
+      console.log("cart : ", cart);
+      console.log("cart.product_cnt : ", cart.product_cnt);
+    });
+    setTotalPrice(total);
+    console.log("total : ", total);
+  }, [nowCarts]);
 
   return (
     <div className="cart_s2">
@@ -191,11 +200,10 @@ const CartS2 = () => {
                   <div
                     onClick={() => {
                       setNowCarts((prevNowCarts) =>
-                        prevNowCarts.map((cart) =>
-                          cart.product_code === cart.product_code &&
-                          cart.product_cnt > 1
-                            ? { ...cart, product_cnt: cart.product_cnt - 1 }
-                            : cart
+                        prevNowCarts.map((item) =>
+                          item.id === cart.id && item.product_cnt > 1
+                            ? { ...item, product_cnt: item.product_cnt - 1 }
+                            : item
                         )
                       );
                     }}
@@ -206,10 +214,10 @@ const CartS2 = () => {
                   <div
                     onClick={() => {
                       setNowCarts((prevNowCarts) =>
-                        prevNowCarts.map((cart) =>
-                          cart.product_code === cart.product_code
-                            ? { ...cart, product_cnt: cart.product_cnt + 1 }
-                            : cart
+                        prevNowCarts.map((item) =>
+                          item.id === cart.id
+                            ? { ...item, product_cnt: item.product_cnt + 1 }
+                            : item
                         )
                       );
                     }}
@@ -250,7 +258,7 @@ const CartS2 = () => {
         </div>
         <div className="total_price_box">
           <p>총 결제금액</p>
-          <p>{totalAmount.toLocaleString()}원</p>
+          <p>{totalPrice.toLocaleString()}원</p>
         </div>
         <div className="btn_box">
           <div
@@ -358,7 +366,7 @@ const CartS2 = () => {
           );
         })}
         <div className="pay_btn">
-          총 {totalAmount.toLocaleString()}원 결제하기
+          총 {totalPrice.toLocaleString()}원 결제하기
         </div>
         <div className="more_btn">더 담으러 가기</div>
       </div>

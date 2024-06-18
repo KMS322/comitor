@@ -1,7 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../CSS/modal.css";
 
 const Modal = ({ setModalOpen }) => {
+  const navigate = useNavigate();
   return (
     <div className="modal_background">
       <div className="modal_container">
@@ -16,7 +18,7 @@ const Modal = ({ setModalOpen }) => {
           <button onClick={() => setModalOpen(false)}>닫기</button>
           <button
             onClick={() => {
-              /* Navigate to cart */
+              navigate("/cart");
             }}
           >
             장바구니로 이동
