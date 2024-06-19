@@ -72,6 +72,10 @@ const AdminLists = () => {
             </div>
             {uniqueProducts &&
               uniqueProducts.map((product, index) => {
+                console.log(
+                  "  product.product_originPrice :  ",
+                  typeof product.product_originPrice
+                );
                 return (
                   <div
                     className={
@@ -83,8 +87,8 @@ const AdminLists = () => {
                   >
                     <p>{product.product_code}</p>
                     <p>{product.product_name}</p>
-                    <p>{product.product_originPrice.toLocalString()}원</p>
-                    <p>{product.product_salePrice.toLocalString()}원</p>
+                    <p>{product.product_originPrice.toLocaleString()}원</p>
+                    <p>{product.product_salePrice.toLocaleString()}원</p>
                     <p>{product.product_imgUrl}</p>
                     <p>{product.product_detailUrl}</p>
                     <div

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { LOAD_CART_REQUEST } from "../../reducers/cart";
+import { LOAD_CART_REQUEST, DELETE_CART_REQUEST } from "../../reducers/cart";
 import { LOAD_PRODUCT_REQUEST } from "../../reducers/adminProduct";
 import "../../CSS/cart.css";
 import "../../CSS/cart_mobile.css";
 const CartS2 = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { carts } = useSelector((state) => state.cart);
+  const { carts, deleteCartDone } = useSelector((state) => state.cart);
   const { products } = useSelector((state) => state.adminProduct);
   const [uniquecarts, setUniquecarts] = useState([]);
   const [uniqueProducts, setUniqueProducts] = useState([]);
@@ -96,11 +96,18 @@ const CartS2 = () => {
   //   });
   // }, [product, selectedCnt]);
 
-  const cancelProduct = (productCode) => {
-    setUniquecarts((prevUniquecarts) =>
-      prevUniquecarts.filter((cart) => cart.product_code !== productCode)
-    );
+  const cancelProduct = (cartId) => {
+    dispatch({
+      type: DELETE_CART_REQUEST,
+      data: { cartId },
+    });
   };
+
+  useEffect(() => {
+    if (deleteCartDone) {
+      window.location.href = "/cart";
+    }
+  }, [deleteCartDone]);
 
   const toggleChecked = (cartId) => {
     setNowCarts((prevNowCarts) =>
@@ -126,20 +133,15 @@ const CartS2 = () => {
 
   useEffect(() => {
     let total = 0;
-    nowCarts.map((cart, index) => {
+    nowCarts.map((cart) => {
       if (cart.checked) {
         const product = uniqueProducts.find(
           (item) => item.product_code === cart.product_code
         );
         total += product.product_salePrice * cart.product_cnt;
-        console.log("product.product_salePrice : ", product.product_salePrice);
       }
-      console.log("index : ", index);
-      console.log("cart : ", cart);
-      console.log("cart.product_cnt : ", cart.product_cnt);
     });
     setTotalPrice(total);
-    console.log("total : ", total);
   }, [nowCarts]);
 
   return (
@@ -246,11 +248,9 @@ const CartS2 = () => {
                       });
                     }}
                   >
-                    결제하기
+                    주문하기
                   </div>
-                  <div onClick={() => cancelProduct(cart.product_code)}>
-                    취소
-                  </div>
+                  <div onClick={() => cancelProduct(cart.id)}>취소</div>
                 </div>
               </div>
             );
@@ -272,10 +272,13 @@ const CartS2 = () => {
           <div
             className="btn"
             onClick={() => {
-              navigate("/pay", { state: { cartProducts: uniquecarts, id: 0 } });
+              const selectedCart = nowCarts.filter(
+                (item) => item.checked === true
+              );
+              navigate("/pay", { state: { selectedCart } });
             }}
           >
-            결제하기
+            주문하기
           </div>
         </div>
         <div className="space"></div>
@@ -366,7 +369,7 @@ const CartS2 = () => {
           );
         })}
         <div className="pay_btn">
-          총 {totalPrice.toLocaleString()}원 결제하기
+          총 {totalPrice.toLocaleString()}원 주문하기
         </div>
         <div className="more_btn">더 담으러 가기</div>
       </div>

@@ -9,21 +9,11 @@ const PayCompleteContent = () => {
   return (
     <div className="complete_s1">
       <div className="article_container">
-        <div
-          className="article"
-          onClick={() => {
-            goPage("/cart");
-          }}
-        >
+        <div className="article">
           <img src="/images/cart/cart_img1_empty.png" alt="" />
           <p>장바구니</p>
         </div>
-        <div
-          className="article"
-          onClick={() => {
-            goPage("/pay");
-          }}
-        >
+        <div className="article">
           <img src="/images/cart/cart_img2_empty.png" alt="" />
           <p>주문하기</p>
         </div>

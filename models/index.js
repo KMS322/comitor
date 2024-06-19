@@ -13,6 +13,8 @@ const sequelize = new Sequelize(
 db.User = require("./user")(sequelize, Sequelize);
 db.Product = require("./product")(sequelize, Sequelize);
 db.Cart = require("./cart")(sequelize, Sequelize);
+db.OrderList = require("./orderList")(sequelize, Sequelize);
+db.OrderProduct = require("./orderProduct")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {

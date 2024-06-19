@@ -3,9 +3,6 @@ import "../../CSS/cart.css";
 import "../../CSS/cart_mobile.css";
 const CartS1 = () => {
   const navigate = useNavigate();
-  const goPage = (path) => {
-    navigate(path);
-  };
   return (
     <div className="cart_s1">
       <div className="article_container">
@@ -13,21 +10,11 @@ const CartS1 = () => {
           <img src="/images/cart/cart_img1_full.png" alt="" />
           <p>장바구니</p>
         </div>
-        <div
-          className="article"
-          onClick={() => {
-            goPage("/pay");
-          }}
-        >
+        <div className="article">
           <img src="/images/cart/cart_img2_empty.png" alt="" />
           <p>주문하기</p>
         </div>
-        <div
-          className="article"
-          onClick={() => {
-            goPage("/complete");
-          }}
-        >
+        <div className="article">
           <img src="/images/cart/cart_img3_empty.png" alt="" />
           <p>주문완료</p>
         </div>
