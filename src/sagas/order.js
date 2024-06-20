@@ -7,6 +7,12 @@ import {
   LOAD_ORDER_REQUEST,
   LOAD_ORDER_SUCCESS,
   LOAD_ORDER_FAILURE,
+  DELETE_ORDER_REQUEST,
+  DELETE_ORDER_SUCCESS,
+  DELETE_ORDER_FAILURE,
+  LOAD_USER_ORDER_REQUEST,
+  LOAD_USER_ORDER_SUCCESS,
+  LOAD_USER_ORDER_FAILURE,
 } from "../reducers/order";
 
 function addOrderAPI(data) {
@@ -57,6 +63,59 @@ function* watchLoadOrder() {
   yield takeLatest(LOAD_ORDER_REQUEST, loadOrder);
 }
 
+function deleteOrderAPI(data) {
+  return axios.post("/order/delete", data);
+}
+
+function* deleteOrder(action) {
+  try {
+    const result = yield call(deleteOrderAPI, action.data);
+    yield put({
+      type: DELETE_ORDER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: DELETE_ORDER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchDeleteOrder() {
+  yield takeLatest(DELETE_ORDER_REQUEST, deleteOrder);
+}
+
+function loadUserOrderAPI(data) {
+  return axios.post("/order/loadUser", data);
+}
+
+function* loadUserOrder(action) {
+  try {
+    const result = yield call(loadUserOrderAPI, action.data);
+    yield put({
+      type: LOAD_USER_ORDER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_USER_ORDER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchLoadUserOrder() {
+  yield takeLatest(LOAD_USER_ORDER_REQUEST, loadUserOrder);
+}
+
 export default function* orderSaga() {
-  yield all([fork(watchAddOrder), fork(watchLoadOrder)]);
+  yield all([
+    fork(watchAddOrder),
+    fork(watchLoadOrder),
+    fork(watchDeleteOrder),
+    fork(watchLoadUserOrder),
+  ]);
 }

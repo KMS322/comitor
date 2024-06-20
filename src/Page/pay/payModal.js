@@ -74,7 +74,6 @@ const PayModal = ({ setModalOpen, orderInfo }) => {
     }
 
     IMP.request_pay(requestData, function (rsp) {
-      // callback
       if (rsp.success) {
         console.log(rsp);
       } else {
@@ -88,6 +87,7 @@ const PayModal = ({ setModalOpen, orderInfo }) => {
       type: ADD_ORDER_REQUEST,
       data: { orderInfo },
     });
+    window.location.href = "/complete";
     // navigate("/complete");
   };
 

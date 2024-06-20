@@ -62,15 +62,14 @@
 /* mypage_s2 */
 .mypage_s2 {
   width: 100%;
-  height: 34.43vw;
+  height: auto;
   border: 1px solid white;
 }
 .mypage_s2 .section_container {
   width: 62.5%;
-  height: 54.46%;
+  height: auto;
   margin: 0 auto;
   margin-top: 8.44vw;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -88,12 +87,13 @@
 }
 .mypage_s2 .section_container .article_container {
   width: 100%;
-  height: 88.06%;
+  height: auto;
   margin-top: 1.25vw;
+  margin-bottom: 10vw;
 }
 .mypage_s2 .section_container .article_container .title {
   width: 100%;
-  height: 17.98%;
+  height: 2.84vw;
   border-top: 2px solid #000035;
   display: flex;
   align-items: center;
@@ -111,24 +111,20 @@
   padding-left: 6.67vw;
 }
 .mypage_s2 .section_container .article_container .title p:nth-child(2) {
-  width: 6.8%;
+  width: 12%;
   margin-left: 3.13vw;
 }
 .mypage_s2 .section_container .article_container .title p:nth-child(3) {
-  width: 6.92%;
+  width: 11%;
   margin-left: 3.96vw;
 }
 .mypage_s2 .section_container .article_container .title p:nth-child(4) {
   width: 12%;
   margin-left: 4.32vw;
 }
-.mypage_s2 .section_container .article_container .title p:nth-child(5) {
-  width: 12.3%;
-  margin-left: 3.44vw;
-}
 .mypage_s2 .section_container .article_container .content {
   width: 100%;
-  height: 82.02%;
+  height: 13.31vw;
   border-top: 1px solid #000035;
   text-align: center;
   display: flex;
@@ -156,24 +152,19 @@
   margin-left: 1.46vw;
 }
 .mypage_s2 .section_container .article_container .content > p:nth-child(2) {
-  width: 6.8%;
+  width: 12%;
   margin-left: 3.13vw;
   font-size: 0.89vw;
 }
 .mypage_s2 .section_container .article_container .content > p:nth-child(3) {
-  width: 6.92%;
+  width: 11%;
   margin-left: 3.96vw;
   font-size: 0.89vw;
 }
-.mypage_s2 .section_container .article_container .content > p:nth-child(4) {
-  width: 12%;
-  margin-left: 4.32vw;
-  font-size: 1.04vw;
-}
 .mypage_s2 .section_container .article_container .content .order_state {
-  width: 12.3%;
+  width: 12%;
   height: 44.7%;
-  margin-left: 3.44vw;
+  margin-left: 4.32vw;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -8,7 +8,9 @@ import "../../CSS/cart_mobile.css";
 const CartS2 = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { carts, deleteCartDone } = useSelector((state) => state.cart);
+  const { carts, loadCartDone, deleteCartDone } = useSelector(
+    (state) => state.cart
+  );
   const { products } = useSelector((state) => state.adminProduct);
   const [uniquecarts, setUniquecarts] = useState([]);
   const [uniqueProducts, setUniqueProducts] = useState([]);
@@ -16,9 +18,6 @@ const CartS2 = () => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   const navigate = useNavigate();
-  const goPage = (path) => {
-    navigate(path);
-  };
 
   useEffect(() => {
     const user = me.id;

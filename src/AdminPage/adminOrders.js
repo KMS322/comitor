@@ -1,16 +1,44 @@
 import "../CSS/adminOrders.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import AdminSubHeader from "./adminSubHeader";
-import { LOAD_ORDER_REQUEST } from "../reducers/order";
+import { LOAD_ORDER_REQUEST, DELETE_ORDER_REQUEST } from "../reducers/order";
+import { LOAD_PRODUCT_REQUEST } from "../reducers/adminProduct";
 
 const AdminOrders = () => {
   const location = useLocation();
   const me = location.state && location.state.me;
   const dispatch = useDispatch();
-  const { orders } = useSelector((state) => state.order);
-  const uniqueOrders = orders.filter(
+  const ordersArray = useSelector((state) => state.order.orders);
+  const { deleteOrderDone } = useSelector((state) => state.order);
+  const { products } = useSelector((state) => state.adminProduct);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_ORDER_REQUEST,
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_PRODUCT_REQUEST,
+    });
+  }, [dispatch]);
+
+  let allLists = [];
+  let allProducts = [];
+
+  ordersArray.forEach((order) => {
+    allLists = allLists.concat(order.allLists);
+    allProducts = allProducts.concat(order.allProducts);
+  });
+
+  const uniqueLists = allLists.filter(
+    (order, index, self) =>
+      index === self.findIndex((o) => o.order_code === order.order_code)
+  );
+  const uniqueProducts = allProducts.filter(
     (order, index, self) =>
       index ===
       self.findIndex(
@@ -20,43 +48,57 @@ const AdminOrders = () => {
       )
   );
 
-  console.log("uniqueOrders : ", uniqueOrders);
+  const formatDateTime = (dateTime) => {
+    const date = new Date(dateTime);
+    const formattedDate = date.toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const formattedTime = date.toLocaleTimeString("ko-KR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    return `${formattedDate} ${formattedTime}`;
+  };
+
+  const deleteOrder = (code) => {
+    dispatch({
+      type: DELETE_ORDER_REQUEST,
+      data: {
+        code,
+      },
+    });
+  };
 
   useEffect(() => {
-    dispatch({
-      type: LOAD_ORDER_REQUEST,
-    });
-  }, [dispatch]);
+    if (deleteOrderDone) {
+      window.location.href = "/adminOrders";
+    }
+  }, [deleteOrderDone]);
   return (
     <>
       <AdminSubHeader data={"주문 관리"} />
-      {/* {(me && me === "") || me.user_id === "admin" ? (
+      {(me && me === "") || me.user_id === "admin" ? (
         <div className="adminOrders">
-          <div className="upload_btn">
-            <p
-              onClick={() => {
-                setOpenForm(true);
-              }}
-            >
-              <span>+</span> 업로드
-            </p>
-          </div>
           <div className="table">
             <div className="head_row row">
-              <p>상품코드</p>
-              <p>상품명</p>
-              <p>할인 전 가격</p>
-              <p>할인 후 가격</p>
-              <p>대표이미지</p>
-              <p>상세페이지</p>
-              <p></p>
+              <p>주문코드</p>
+              <p>이름</p>
+              <p>상품번호</p>
+              <p>갯수</p>
+              <p>전화번호</p>
+              <p>주소</p>
+              <p>요청사항</p>
+              <p>주문날짜</p>
             </div>
-            {uniqueProducts &&
-              uniqueProducts.map((product, index) => {
-                console.log(
-                  "  product.product_originPrice :  ",
-                  typeof product.product_originPrice
+            {uniqueLists &&
+              uniqueLists.map((list, index) => {
+                const orderedproducts = uniqueProducts.filter(
+                  (item) => item.order_code === list.order_code
                 );
+
                 return (
                   <div
                     className={
@@ -66,16 +108,32 @@ const AdminOrders = () => {
                     }
                     key={index}
                   >
-                    <p>{product.product_code}</p>
-                    <p>{product.product_name}</p>
-                    <p>{product.product_originPrice.toLocaleString()}원</p>
-                    <p>{product.product_salePrice.toLocaleString()}원</p>
-                    <p>{product.product_imgUrl}</p>
-                    <p>{product.product_detailUrl}</p>
+                    <p>{list.order_code}</p>
+                    <p>{list.order_name}</p>
+                    <div className="productName">
+                      {orderedproducts.map((product, index) => {
+                        const selectedProduct = products.find(
+                          (item) => item.product_code === product.product_code
+                        );
+                        return (
+                          <p key={index}>{selectedProduct.product_code}</p>
+                        );
+                      })}
+                    </div>
+                    <div className="productCnt">
+                      {orderedproducts.map((product, index) => {
+                        return <p key={index}>{product.product_cnt}개</p>;
+                      })}
+                    </div>
+
+                    <p>{list.order_phone}</p>
+                    <p>{list.order_address}</p>
+                    <p>{list.order_request}</p>
+                    <p>{formatDateTime(list.createdAt)}</p>
                     <div
                       className="btn_box"
                       onClick={() => {
-                        deleteProduct(product.product_code);
+                        deleteOrder(list.order_code);
                       }}
                     >
                       <p>삭제</p>
@@ -87,7 +145,7 @@ const AdminOrders = () => {
         </div>
       ) : (
         ""
-      )} */}
+      )}
     </>
   );
 };

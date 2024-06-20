@@ -69,6 +69,7 @@ const reducer = (state = initialState, action) => {
         draft.deleteCartLoading = false;
         draft.deleteCartError = action.error;
         break;
+
       default:
         return state;
     }

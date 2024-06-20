@@ -1,31 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_USER_ORDER_REQUEST } from "../../reducers/order";
+import { LOAD_PRODUCT_REQUEST } from "../../reducers/adminProduct";
 import "../../CSS/mypage.css";
-const MypageS2 = () => {
+const MypageS2 = ({ userId }) => {
+  const dispatch = useDispatch();
+  const { userProducts } = useSelector((state) => state.order);
+  const { products } = useSelector((state) => state.adminProduct);
   const [popupState, setPopupState] = useState(false);
-  const [orderedProducts, setOrderedProducts] = useState([
-    {
-      id: 1,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제`,
-      imageUrl: "/images/product/product_img1.jpg",
-      price: 17900,
-      originPrice: 26000,
-      cnt: 1,
-      orderedDate: "2023.10.24",
-      orderedNum: "202310241002",
-    },
-  ]);
-  if (orderedProducts === null) {
-    setOrderedProducts({
-      id: 1,
-      name: `코미토르 밸런스 펫 세럼<br />강아지 발습진 발사탕 피부병 보습제`,
-      imageUrl: "/images/product/product_img1.jpg",
-      price: 17900,
-      originPrice: 26000,
-      cnt: 1,
-      orderedDate: "2023.10.24",
-      orderedNum: "202310241002",
+  const [uniqueProducts, setUniqueProducts] = useState([]);
+  useEffect(() => {
+    dispatch({
+      type: LOAD_USER_ORDER_REQUEST,
+      data: { userId },
     });
-  }
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch({
+      type: LOAD_PRODUCT_REQUEST,
+    });
+  }, [dispatch]);
+  useEffect(() => {
+    const removeDuplicatesById = (lists) => {
+      if (!lists || !Array.isArray(lists)) {
+        return [];
+      }
+      const uniqueLists = [];
+      const existingIds = [];
+
+      for (const list of lists) {
+        if (
+          list &&
+          list.product_code &&
+          !existingIds.includes(list.product_code)
+        ) {
+          uniqueLists.push(list);
+          existingIds.push(list.product_code);
+        }
+      }
+
+      return uniqueLists;
+    };
+
+    setUniqueProducts(removeDuplicatesById(products));
+  }, [products]);
+
+  const formatDateTime = (dateTime) => {
+    const date = new Date(dateTime);
+    const formattedDate = date.toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const formattedTime = date.toLocaleTimeString("ko-KR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    return `${formattedDate} ${formattedTime}`;
+  };
+
   return (
     <>
       <div className="mypage_s2">
@@ -37,42 +71,50 @@ const MypageS2 = () => {
             <div className="title">
               <p>상품정보</p>
               <p>주문일자</p>
-              <p>주문번호</p>
               <p>주문금액(수량)</p>
               <p>주문상태</p>
             </div>
-            {orderedProducts.map((orderedProduct, index) => {
-              return (
-                <div className="content">
-                  <div className="item_box">
-                    <div className="img_box">
-                      <img src={orderedProduct.imageUrl} alt="" />
+            {userProducts &&
+              userProducts.map((userProduct, index) => {
+                const product = uniqueProducts.find(
+                  (item) => item.product_code === userProduct.product_code
+                );
+                console.log("product : ", product);
+                return (
+                  <div className="content">
+                    <div className="item_box">
+                      <div className="img_box">
+                        <img
+                          src={`/images/mainImage/${product.product_imgUrl}`}
+                          alt=""
+                        />
+                      </div>
+                      <p
+                      // dangerouslySetInnerHTML={{ __html: orderedProduct.name }}
+                      >
+                        {product.product_name}
+                      </p>
                     </div>
-                    <p
-                      dangerouslySetInnerHTML={{ __html: orderedProduct.name }}
-                    ></p>
-                  </div>
-                  <p>{orderedProduct.orderedDate}</p>
-                  <p>{orderedProduct.orderedNum}</p>
-                  <p>
-                    {orderedProduct.price.toLocaleString()}원(
-                    {orderedProduct.cnt}개)
-                  </p>
-                  <div className="order_state">
-                    <p>출고 준비중</p>
-                    <div
-                      className="btn"
-                      onClick={() => {
-                        setPopupState(!popupState);
-                      }}
-                    >
-                      배송조회
+                    <p>{formatDateTime(userProduct.createdAt)}</p>
+                    <p>
+                      {product.product_salePrice.toLocaleString()}원(
+                      {userProduct.product_cnt}개)
+                    </p>
+                    <div className="order_state">
+                      <p>출고 준비중</p>
+                      <div
+                        className="btn"
+                        onClick={() => {
+                          setPopupState(!popupState);
+                        }}
+                      >
+                        배송조회
+                      </div>
+                      <div className="btn">리뷰쓰기</div>
                     </div>
-                    <div className="btn">리뷰쓰기</div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
         <div id="mobile" className="article_container">

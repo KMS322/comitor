@@ -4,22 +4,7 @@
   height: auto;
   margin: 0 auto;
   margin-bottom: 10vw;
-}
-.adminOrders .upload_btn {
-  width: 5.47vw;
-  height: 1.67vw;
-  margin-top: 1.77vw;
-  margin-left: auto;
-  justify-self: flex-end;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  cursor: pointer;
-}
-.adminOrders .upload_btn p {
-  font-size: 0.89vw;
-  color: white;
+  margin-top: 3.5vw;
 }
 .adminOrders .table {
   width: 100%;
@@ -39,7 +24,7 @@
 }
 .adminOrders .table .content_row {
   width: 100%;
-  height: 2.6vw;
+  height: auto;
   display: flex;
   align-items: center;
 }
@@ -49,50 +34,71 @@
 .adminOrders .table .content_row p {
   font-size: 0.9vw;
   font-weight: 200;
+  line-height: 2vw;
 }
 .adminOrders .table .row > p {
   text-align: center;
 }
 .adminOrders .table .row > p:nth-child(1) {
-  margin-left: 1vw;
-  width: 8%;
+  margin-left: 0.5vw;
+  width: 10%;
   text-align: center;
 }
 .adminOrders .table .row > p:nth-child(2) {
   margin-left: 1.3vw;
-  width: 40%;
+  width: 8%;
   white-space: nowrap;
   overflow: hidden;
 }
 .adminOrders .table .row > p:nth-child(3) {
   margin-left: 1.3vw;
-  width: 7%;
+  width: 5%;
   white-space: nowrap;
   overflow: hidden;
+}
+.adminOrders .table .row .productName {
+  margin-left: 1.3vw;
+  width: 5%;
+  text-align: center;
 }
 .adminOrders .table .row > p:nth-child(4) {
   margin-left: 1.3vw;
-  width: 7%;
+  width: 4%;
   white-space: nowrap;
   overflow: hidden;
 }
+.adminOrders .table .row .productCnt {
+  margin-left: 1.3vw;
+  width: 4%;
+  text-align: center;
+}
 .adminOrders .table .row > p:nth-child(5) {
   margin-left: 1.3vw;
-  width: 12%;
+  width: 7%;
+}
+.adminOrders .table .row .productPrice {
+  margin-left: 1.3vw;
+  width: 7%;
+  border: 1px solid blue;
+  text-align: center;
 }
 .adminOrders .table .row > p:nth-child(6) {
   margin-left: 1.3vw;
-  width: 12%;
+  width: 25%;
 }
 .adminOrders .table .row > p:nth-child(7) {
-  margin-left: 3vw;
-  width: 5%;
+  margin-left: 1.3vw;
+  width: 15%;
+}
+.adminOrders .table .row > p:nth-child(8) {
+  margin-left: 1.3vw;
+  width: 8%;
 }
 
 .adminOrders .table .content_row .btn_box {
   width: 5%;
   height: 80%;
-  margin-left: 3vw;
+  margin-left: 1.5vw;
   display: flex;
   justify-content: space-between;
   border: 1px solid black;
