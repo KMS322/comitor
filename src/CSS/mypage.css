@@ -15,7 +15,8 @@
   width: 20%;
   height: 26.98%;
   margin-top: 6.77vw;
-  margin-left: 2.5vw;
+  /* margin-left: 2.5vw; */
+  margin-left: 18.6vw;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -25,6 +26,7 @@
   font-weight: 400;
   color: white;
   text-decoration: underline;
+  cursor: pointer;
 }
 .mypage_s1 .text_box p:nth-child(2) {
   font-size: 2.4vw;
@@ -56,6 +58,146 @@
 .mypage_s1 .review_box p:nth-child(3) {
   font-size: 1.51vw;
   font-weight: 700;
+  color: white;
+}
+
+/* modal_background */
+.modal_background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal_container {
+  width: 30vw;
+  height: auto;
+  /* min-height: 40vw; */
+  max-height: 40vw;
+  overflow-y: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal_content {
+  margin: 20px 0;
+}
+.modal_content .input_box {
+  width: 100%;
+  margin-bottom: 1vw;
+}
+.modal_content .input_box:nth-child(6) {
+  margin-bottom: 0vw;
+}
+.modal_content .input_box p {
+  font-size: 0.9vw;
+  font-weight: 600;
+}
+.modal_content .input_box input {
+  width: 85%;
+  height: 2vw;
+  font-size: 0.9vw;
+  margin-top: 0.5vw;
+  padding-left: 0.3vw;
+}
+.modal_content .input_box .changeBtn {
+  width: 9vw;
+  height: 1.8vw;
+  display: flex;
+  font-size: 0.8vw;
+  color: white;
+  background-color: #000035;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.modal_content .pwBtn {
+  width: 10vw;
+  height: 1.5vw;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5vw;
+  margin-bottom: 1vw;
+}
+.modal_content .pwBtn p {
+  width: 45%;
+  height: 100%;
+  font-size: 0.9vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000035;
+  cursor: pointer;
+}
+.modal_content .pwBtn p:last-child {
+  background-color: #000035;
+  color: white;
+}
+.modal_content .phone_btn {
+  width: 5vw;
+  height: 1.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000035;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 1vw;
+}
+.modal_content .change_address {
+  width: 7vw;
+  height: 1.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000035;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 1vw;
+  margin-top: 1vw;
+}
+.modal_content .address_btn {
+  width: 7vw;
+  height: 1.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000035;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 1vw;
+  margin-top: 0.5vw;
+}
+.modal_content .addressBtn {
+  width: 10vw;
+  height: 1.5vw;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5vw;
+  margin-bottom: 1vw;
+}
+.modal_content .addressBtn p {
+  width: 45%;
+  height: 100%;
+  font-size: 0.9vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000035;
+  cursor: pointer;
+}
+.modal_content .addressBtn p:last-child {
+  background-color: #000035;
   color: white;
 }
 

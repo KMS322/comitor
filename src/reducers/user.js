@@ -19,6 +19,12 @@ export const initialState = {
   changePasswordLoading: false,
   changePasswordDone: false,
   changePasswordError: null,
+  changePhoneLoading: false,
+  changePhoneDone: false,
+  changePhoneError: null,
+  changeAddressLoading: false,
+  changeAddressDone: false,
+  changeAddressError: null,
   me: null,
   signUpData: {},
   loginData: {},
@@ -48,15 +54,13 @@ export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAUILURE";
 
-export const ADD_RESUME_TO_ME = "ADD_RESUME_TO_ME";
-export const ADD_CAREER_TO_ME = "ADD_CAREER_TO_ME";
-export const ADD_APPLICATION_TO_ME = "ADD_APPLICATION_TO_ME";
-export const ADD_RECRUITMENT_TO_ME = "ADD_RECRUITMENT_TO_ME";
+export const CHANGE_PHONE_REQUEST = "CHANGE_PHONE_REQUEST";
+export const CHANGE_PHONE_SUCCESS = "CHANGE_PHONE_SUCCESS";
+export const CHANGE_PHONE_FAILURE = "CHANGE_PHONE_FAUILURE";
 
-export const REMOVE_RESUME_OF_ME = "REMOVE_RESUME_OF_ME";
-export const REMOVE_CAREER_OF_ME = "REMOVE_CAREER_OF_ME";
-export const REMOVE_APPLICATION_OF_ME = "REMOVE_APPLICATION_OF_ME";
-export const REMOVE_RECRUITMENT_OF_ME = "REMOVE_RECRUITMENT_OF_ME";
+export const CHANGE_ADDRESS_REQUEST = "CHANGE_ADDRESS_REQUEST";
+export const CHANGE_ADDRESS_SUCCESS = "CHANGE_ADDRESS_SUCCESS";
+export const CHANGE_ADDRESS_FAILURE = "CHANGE_ADDRESS_FAUILURE";
 
 export const loginRequestAction = (data) => {
   return {
@@ -161,33 +165,31 @@ const reducer = (state = initialState, action) => {
         draft.changePasswordLoading = false;
         draft.changePasswordError = action.error;
         break;
-      case ADD_RESUME_TO_ME:
-        draft.me.resumes.unshift({ id: action.data });
+      case CHANGE_PHONE_REQUEST:
+        draft.changePhoneLoading = true;
+        draft.changePhoneError = null;
+        draft.changePhoneDone = false;
         break;
-      case ADD_CAREER_TO_ME:
-        draft.me.careers.unshift({ id: action.data });
+      case CHANGE_PHONE_SUCCESS:
+        draft.changePhoneLoading = false;
+        draft.changePhoneDone = true;
         break;
-      case ADD_APPLICATION_TO_ME:
-        draft.me.applications.unshift({ id: action.data });
+      case CHANGE_PHONE_FAILURE:
+        draft.changePhoneLoading = false;
+        draft.changePhoneError = action.error;
         break;
-      case ADD_RECRUITMENT_TO_ME:
-        draft.me.recruitments.unshift({ id: action.data });
+      case CHANGE_ADDRESS_REQUEST:
+        draft.changeAddressLoading = true;
+        draft.changeAddressError = null;
+        draft.changeAddressDone = false;
         break;
-      case REMOVE_RESUME_OF_ME:
-        draft.me.resumes = draft.me.resumes.filter((v) => v.id !== action.data);
+      case CHANGE_ADDRESS_SUCCESS:
+        draft.changeAddressLoading = false;
+        draft.changeAddressDone = true;
         break;
-      case REMOVE_CAREER_OF_ME:
-        draft.me.careers = draft.me.careers.filter((v) => v.id !== action.data);
-        break;
-      case REMOVE_APPLICATION_OF_ME:
-        draft.me.applications = draft.me.applications.filter(
-          (v) => v.id !== action.data
-        );
-        break;
-      case REMOVE_RECRUITMENT_OF_ME:
-        draft.me.recruitments = draft.me.recruitments.filter(
-          (v) => v.id !== action.data
-        );
+      case CHANGE_ADDRESS_FAILURE:
+        draft.changeAddressLoading = false;
+        draft.changeAddressError = action.error;
         break;
       default:
         return state;

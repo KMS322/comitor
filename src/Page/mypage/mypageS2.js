@@ -79,9 +79,8 @@ const MypageS2 = ({ userId }) => {
                 const product = uniqueProducts.find(
                   (item) => item.product_code === userProduct.product_code
                 );
-                console.log("product : ", product);
                 return (
-                  <div className="content">
+                  <div className="content" key={index}>
                     <div className="item_box">
                       <div className="img_box">
                         <img

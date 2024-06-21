@@ -115,4 +115,71 @@ router.post("/checkId", isNotLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
+
+router.post("/changePassword", isLoggedIn, async (req, res, next) => {
+  try {
+    const changeUser = await User.findOne({
+      where: {
+        user_id: req.body.userId,
+      },
+    });
+    const currentPasswordMatch = await bcrypt.compare(
+      req.body.currentPw,
+      changeUser.user_pw
+    );
+
+    if (!currentPasswordMatch) {
+      return res.status(401).send("현재 비밀번호가 일치하지 않습니다.");
+    }
+    const hashedNewPassword = await bcrypt.hash(req.body.newPw, 12);
+    changeUser.user_pw = hashedNewPassword;
+    await changeUser.save();
+
+    res.status(200).send("비밀번호가 성공적으로 변경되었습니다.");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/changePhone", isLoggedIn, async (req, res, next) => {
+  try {
+    const changeUser = await User.findOne({
+      where: {
+        user_id: req.body.userId,
+      },
+    });
+
+    changeUser.user_phone = req.body.user_phone;
+    await changeUser.save();
+
+    res.status(200).send("전화번호가 성공적으로 변경되었습니다.");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/changeAddress", isLoggedIn, async (req, res, next) => {
+  try {
+    console.log("req.body :", req.body);
+    const changeUser = await User.findOne({
+      where: {
+        user_id: req.body.userId,
+      },
+    });
+
+    changeUser.user_jibunAddress = req.body.user_jibunAddress;
+    changeUser.user_roadAddress = req.body.user_roadAddress;
+    changeUser.user_postcode = req.body.user_postcode;
+    changeUser.user_detailAddress = req.body.user_detailAddress;
+    await changeUser.save();
+
+    res.status(200).send("주소가 성공적으로 변경되었습니다.");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -17,6 +17,7 @@ import CartContents from "./Page/cart/cartContents";
 import PayContents from "./Page/pay/payContents";
 import PayCompleteContent from "./Page/payComplete/payCompleteContent";
 import ShopDetailContents from "./Page/shopDetail/shopDetailContents";
+import BoardContent from "./Page/board/boardContent.js";
 import AdminMain from "./AdminPage/adminMain.js";
 import AdminLogin from "./AdminPage/adminLogin.js";
 import AdminSignup from "./AdminPage/adminSignup.js";
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/pay" element={<PayContents />} />
         <Route path="/complete" element={<PayCompleteContent />} />
         <Route path="/shopDetail/:code" element={<ShopDetailContents />} />
+        <Route path="/board" element={<BoardContent />} />
 
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/adminSignup" element={<AdminSignup />} />

@@ -44,6 +44,13 @@ const Header = () => {
         >
           Shop
         </p>
+        <p
+          onClick={() => {
+            goPage("/board");
+          }}
+        >
+          Q&A
+        </p>
       </div>
       <div className="header_logo">
         <img

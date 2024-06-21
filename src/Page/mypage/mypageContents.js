@@ -34,7 +34,7 @@ const MypageContents = () => {
   // }, [carts]);
   return (
     <>
-      <MypageS1 />
+      <MypageS1 me={me} />
       <MypageS2 userId={userId} />
       {/* <MypageS3 carts = {uniquecarts} /> */}
       <MypageS4 />

@@ -19,6 +19,12 @@ import {
   CHANGE_PASSWORD_REQUEST,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
+  CHANGE_PHONE_REQUEST,
+  CHANGE_PHONE_SUCCESS,
+  CHANGE_PHONE_FAILURE,
+  CHANGE_ADDRESS_REQUEST,
+  CHANGE_ADDRESS_SUCCESS,
+  CHANGE_ADDRESS_FAILURE,
 } from "../reducers/user";
 
 function loadUserAPI() {
@@ -136,6 +142,44 @@ function* changePassword(action) {
   }
 }
 
+function changePhoneAPI(data) {
+  return axios.post("/user/changePhone", data);
+}
+
+function* changePhone(action) {
+  try {
+    const result = yield call(changePhoneAPI, action.data);
+    yield put({
+      type: CHANGE_PHONE_SUCCESS,
+      data: action.data,
+    });
+  } catch (err) {
+    yield put({
+      type: CHANGE_PHONE_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function changeAddressAPI(data) {
+  return axios.post("/user/changeAddress", data);
+}
+
+function* changeAddress(action) {
+  try {
+    const result = yield call(changeAddressAPI, action.data);
+    yield put({
+      type: CHANGE_ADDRESS_SUCCESS,
+      data: action.data,
+    });
+  } catch (err) {
+    yield put({
+      type: CHANGE_ADDRESS_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function* watchLoadUser() {
   yield takeLatest(LOAD_MY_INFO_REQUEST, loadUser);
 }
@@ -159,6 +203,14 @@ function* watchcheckId() {
 function* watchChangePassword() {
   yield takeLatest(CHANGE_PASSWORD_REQUEST, changePassword);
 }
+
+function* watchChangePhone() {
+  yield takeLatest(CHANGE_PHONE_REQUEST, changePhone);
+}
+
+function* watchChangeAddress() {
+  yield takeLatest(CHANGE_ADDRESS_REQUEST, changeAddress);
+}
 export default function* userSaga() {
   yield all([
     fork(watchLoadUser),
@@ -167,5 +219,7 @@ export default function* userSaga() {
     fork(watchSignUp),
     fork(watchChangePassword),
     fork(watchcheckId),
+    fork(watchChangePhone),
+    fork(watchChangeAddress),
   ]);
 }
