@@ -15,6 +15,7 @@ db.Product = require("./product")(sequelize, Sequelize);
 db.Cart = require("./cart")(sequelize, Sequelize);
 db.OrderList = require("./orderList")(sequelize, Sequelize);
 db.OrderProduct = require("./orderProduct")(sequelize, Sequelize);
+db.Board = require("./board")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {

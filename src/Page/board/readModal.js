@@ -1,34 +1,75 @@
 import "../../CSS/board.css";
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-const ReadModal = ({ setModalOpen }) => {
+import { LOAD_READ_REQUEST } from "../../reducers/board";
+const ReadModal = ({ setModalOpen, id }) => {
   const dispatch = useDispatch();
+  const { read } = useSelector((state) => state.board);
 
+  useEffect(() => {
+    dispatch({
+      type: LOAD_READ_REQUEST,
+      data: { id },
+    });
+  }, [dispatch, id]);
+
+  const removeDuplicatesById = (lists) => {
+    if (!lists || !Array.isArray(lists)) {
+      return [];
+    }
+    const uniqueLists = [];
+    const existingIds = [];
+
+    for (const list of lists) {
+      if (list && list.id && !existingIds.includes(list.id)) {
+        uniqueLists.push(list);
+        existingIds.push(list.id);
+      }
+    }
+
+    return uniqueLists;
+  };
+  const uniqueRead = removeDuplicatesById(read);
+  const readContent =
+    uniqueRead && uniqueRead.length > 0 ? uniqueRead[0] : null;
   return (
     <div className="readModal_container">
       <div className="readModal_header">
         <h2></h2>
-        <button onClick={() => setModalOpen(false)}>닫기 X</button>
+        <button
+          onClick={() => {
+            setModalOpen(false);
+            window.location.href = "/board";
+          }}
+        >
+          닫기 X
+        </button>
       </div>
       <div className="readModal_content">
-        <div className="text_box">
-          <p>제목</p>
-          <div>
-            <p>이건 제목입니다.</p>
-          </div>
-        </div>
-        <div className="text_box">
-          <p>내용</p>
-          <div>
-            <p>이건 내용입니다.</p>
-          </div>
-        </div>
-        <div className="text_box">
-          <p>답변내용</p>
-          <div>
-            <p>이건 답변내용입니다.</p>
-          </div>
-        </div>
+        {readContent ? (
+          <>
+            <div className="text_box">
+              <p>제목</p>
+              <div>
+                <p>{readContent.board_title}</p>
+              </div>
+            </div>
+            <div className="text_box">
+              <p>내용</p>
+              <div>
+                <p>{readContent.board_content}</p>
+              </div>
+            </div>
+            <div className="text_box">
+              <p>답변내용</p>
+              <div>
+                <p>아직 답변이 없습니다.</p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
     </div>
   );
