@@ -26,6 +26,21 @@ router.post("/load", async (req, res, next) => {
   }
 });
 
+router.post("/delete", async (req, res, next) => {
+  try {
+    console.log("req.body : ", req.body);
+    const deletedBoard = await Board.destroy({
+      where: {
+        id: req.body.id,
+      },
+    });
+    res.status(200).json(deletedBoard);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.post("/read", async (req, res, next) => {
   try {
     const readBoard = await Board.findOne({
@@ -51,6 +66,26 @@ router.post("/check", async (req, res, next) => {
       console.log("BB");
       res.status(403).send("비밀번호가 틀렸습니다.");
     }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/addComment", async (req, res, next) => {
+  try {
+    await Board.update(
+      {
+        board_comment: req.body.board_comment,
+        board_state: "답변완료",
+      },
+      {
+        where: {
+          id: req.body.id,
+        },
+      }
+    );
+    res.status(200).send("ok");
   } catch (error) {
     console.error(error);
     next(error);

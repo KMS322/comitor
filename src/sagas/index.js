@@ -5,6 +5,7 @@ import adminProductSaga from "./adminProduct";
 import cartSaga from "./cart";
 import orderSaga from "./order";
 import boardSaga from "./board";
+import bannerSaga from "./banner";
 
 import { API_URL } from "../constants";
 
@@ -18,5 +19,6 @@ export default function* rootSaga() {
     fork(cartSaga),
     fork(orderSaga),
     fork(boardSaga),
+    fork(bannerSaga),
   ]);
 }

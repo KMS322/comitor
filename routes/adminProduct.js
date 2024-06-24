@@ -14,6 +14,7 @@ router.post("/upload", async (req, res, next) => {
       product_salePrice: req.body.product_salePrice,
       product_imgUrl: req.body.mainImage,
       product_detailUrl: req.body.detailPage,
+      product_saleCnt: 0,
     });
     res.status(201).send("ok");
   } catch (error) {

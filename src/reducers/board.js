@@ -6,12 +6,18 @@ export const initialState = {
   loadBoardLoading: false,
   loadBoardDone: false,
   loadBoardError: null,
+  deleteBoardLoading: false,
+  deleteBoardDone: false,
+  deleteBoardError: null,
   loadReadLoading: false,
   loadReadDone: false,
   loadReadError: null,
   checkBoardLoading: false,
   checkBoardDone: false,
   checkBoardError: null,
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null,
   boardLists: [],
   read: [],
 };
@@ -24,6 +30,10 @@ export const LOAD_BOARD_REQUEST = "LOAD_BOARD_REQUEST";
 export const LOAD_BOARD_SUCCESS = "LOAD_BOARD_SUCCESS";
 export const LOAD_BOARD_FAILURE = "LOAD_BOARD_FAILURE";
 
+export const DELETE_BOARD_REQUEST = "DELETE_BOARD_REQUEST";
+export const DELETE_BOARD_SUCCESS = "DELETE_BOARD_SUCCESS";
+export const DELETE_BOARD_FAILURE = "DELETE_BOARD_FAILURE";
+
 export const LOAD_READ_REQUEST = "LOAD_READ_REQUEST";
 export const LOAD_READ_SUCCESS = "LOAD_READ_SUCCESS";
 export const LOAD_READ_FAILURE = "LOAD_READ_FAILURE";
@@ -31,6 +41,10 @@ export const LOAD_READ_FAILURE = "LOAD_READ_FAILURE";
 export const CHECK_BOARD_REQUEST = "CHECK_BOARD_REQUEST";
 export const CHECK_BOARD_SUCCESS = "CHECK_BOARD_SUCCESS";
 export const CHECK_BOARD_FAILURE = "CHECK_BOARD_FAILURE";
+
+export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
+export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
+export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
@@ -62,6 +76,20 @@ const reducer = (state = initialState, action) => {
         draft.loadBoardLoading = false;
         draft.loadBoardError = action.error;
         break;
+      case DELETE_BOARD_REQUEST:
+        draft.deleteBoardLoading = true;
+        draft.deleteBoardError = null;
+        draft.deleteBoardDone = false;
+        break;
+      case DELETE_BOARD_SUCCESS:
+        draft.deleteBoardLoading = false;
+        draft.deleteBoardDone = true;
+        draft.boardLists = draft.boardLists.filter((v) => v.id !== action.data);
+        break;
+      case DELETE_BOARD_FAILURE:
+        draft.deleteBoardLoading = false;
+        draft.deleteBoardError = action.error;
+        break;
       case LOAD_READ_REQUEST:
         draft.loadReadLoading = true;
         draft.loadReadError = null;
@@ -88,6 +116,19 @@ const reducer = (state = initialState, action) => {
       case CHECK_BOARD_FAILURE:
         draft.checkBoardLoading = false;
         draft.checkBoardError = action.error;
+        break;
+      case ADD_COMMENT_REQUEST:
+        draft.addCommentLoading = true;
+        draft.addCommentError = null;
+        draft.addCommentDone = false;
+        break;
+      case ADD_COMMENT_SUCCESS:
+        draft.addCommentLoading = false;
+        draft.addCommentDone = true;
+        break;
+      case ADD_COMMENT_FAILURE:
+        draft.addCommentLoading = false;
+        draft.addCommentError = action.error;
         break;
       default:
         return state;

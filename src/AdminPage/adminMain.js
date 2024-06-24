@@ -40,6 +40,13 @@ const AdminMain = () => {
         >
           주문 목록
         </p>
+        <p
+          onClick={() => {
+            navigate("/adminBanners", { state: { me } });
+          }}
+        >
+          배너 목록
+        </p>
         {/* <p
           onClick={() => {
             navigate("/adminPopup", { state: { me } });

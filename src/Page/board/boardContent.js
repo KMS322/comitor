@@ -1,17 +1,19 @@
 import "../../CSS/board.css";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { LOAD_BOARD_REQUEST } from "../../reducers/board";
+import { LOAD_BOARD_REQUEST, DELETE_BOARD_REQUEST } from "../../reducers/board";
 import WriteModal from "./writeModal";
 import ReadModal from "./readModal";
 import PwModal from "./pwModal";
+import PwModal2 from "./pwModal2";
+import CommentModal from "./commentModal";
 const BoardContent = () => {
   const dispatch = useDispatch();
-  const { boardLists } = useSelector((state) => state.board);
+  const { boardLists, deleteBoardDone } = useSelector((state) => state.board);
   const { me } = useSelector((state) => state.user);
-  console.log("me : ", me);
   const [writeModalOpen, setWriteModalOpen] = useState(false);
   const [pwModalOpen, setPwModalOpen] = useState(null);
+  const [pwModal2Open, setPwModal2Open] = useState(null);
   const [readModalOpen, setReadModalOpen] = useState(null);
   const [commentModalOpen, setCommentModalOpen] = useState(null);
 
@@ -52,9 +54,23 @@ const BoardContent = () => {
     setPwModalOpen(null);
     setReadModalOpen(id);
   };
+  const handlePasswordSuccess2 = (id) => {
+    console.log("id : ", id);
+    setPwModal2Open(null);
+    dispatch({
+      type: DELETE_BOARD_REQUEST,
+      data: { id },
+    });
+  };
   const closeReadModal = () => {
     setReadModalOpen(null);
   };
+
+  useEffect(() => {
+    if (deleteBoardDone) {
+      window.location.href = "/board";
+    }
+  }, [deleteBoardDone]);
   return (
     <div className="board_container">
       <p className="title">문의게시판</p>
@@ -83,15 +99,23 @@ const BoardContent = () => {
                   <p
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setCommentModalOpen(true);
+                      setCommentModalOpen(list.id);
                     }}
                   >
-                    답변여부
+                    {list.board_state === "답변완료" ? "답변등록" : "답변대기"}
                   </p>
                 ) : (
-                  <p>답변여부</p>
+                  <p>
+                    {list.board_state === "답변완료" ? "답변등록" : "답변대기"}
+                  </p>
                 )}
-                <p>삭제</p>
+                <p
+                  onClick={() => {
+                    setPwModal2Open(list.id);
+                  }}
+                >
+                  삭제
+                </p>
               </div>
             );
           })}
@@ -113,8 +137,21 @@ const BoardContent = () => {
           onPasswordSuccess={handlePasswordSuccess}
         />
       )}
+      {pwModal2Open && (
+        <PwModal2
+          setModalOpen={setPwModal2Open}
+          id={pwModal2Open}
+          onPasswordSuccess={handlePasswordSuccess2}
+        />
+      )}
       {readModalOpen && (
         <ReadModal setModalOpen={closeReadModal} id={readModalOpen} />
+      )}
+      {commentModalOpen && (
+        <CommentModal
+          setModalOpen={setCommentModalOpen}
+          id={commentModalOpen}
+        />
       )}
     </div>
   );

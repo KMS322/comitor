@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(50),
         allonwNull: true,
       },
+      product_saleCnt: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       charset: "utf8",

@@ -63,7 +63,10 @@ const ReadModal = ({ setModalOpen, id }) => {
             <div className="text_box">
               <p>답변내용</p>
               <div>
-                <p>아직 답변이 없습니다.</p>
+                <p>
+                  {readContent.board_comment ||
+                    "아직 답변이 등록되지 않았습니다."}
+                </p>
               </div>
             </div>
           </>
