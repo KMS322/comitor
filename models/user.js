@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(10),
         allowNull: true,
       },
+      user_coupon: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
+      },
     },
     {
       charset: "utf8",

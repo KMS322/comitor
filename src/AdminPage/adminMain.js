@@ -47,6 +47,13 @@ const AdminMain = () => {
         >
           배너 목록
         </p>
+        <p
+          onClick={() => {
+            navigate("/adminCoupons", { state: { me } });
+          }}
+        >
+          쿠폰 목록
+        </p>
         {/* <p
           onClick={() => {
             navigate("/adminPopup", { state: { me } });

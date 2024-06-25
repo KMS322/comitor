@@ -8,9 +8,7 @@ import "../../CSS/cart_mobile.css";
 const CartS2 = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { carts, loadCartDone, deleteCartDone } = useSelector(
-    (state) => state.cart
-  );
+  const { carts, deleteCartDone } = useSelector((state) => state.cart);
   const { products } = useSelector((state) => state.adminProduct);
   const [uniquecarts, setUniquecarts] = useState([]);
   const [uniqueProducts, setUniqueProducts] = useState([]);
@@ -20,7 +18,7 @@ const CartS2 = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = me.id;
+    const user = me && me.id;
     dispatch({
       type: LOAD_CART_REQUEST,
       data: { user },
@@ -84,16 +82,6 @@ const CartS2 = () => {
     }));
     setNowCarts(updatedCarts);
   }, [uniquecarts]);
-  // useEffect(() => {
-  //   setCartProducts((prevCartProducts) => {
-  //     if (selectedCnt > 0) {
-  //       const updatedProduct = { ...product, cnt: selectedCnt };
-  //       updatedProduct.id = prevCartProducts.length + 1;
-  //       return [...prevCartProducts, updatedProduct];
-  //     }
-  //     return [...prevCartProducts];
-  //   });
-  // }, [product, selectedCnt]);
 
   const cancelProduct = (cartId) => {
     dispatch({
@@ -255,6 +243,7 @@ const CartS2 = () => {
             );
           })}
         </div>
+
         <div className="total_price_box">
           <p>총 결제금액</p>
           <p>{totalPrice.toLocaleString()}원</p>
@@ -274,6 +263,7 @@ const CartS2 = () => {
               const selectedCart = nowCarts.filter(
                 (item) => item.checked === true
               );
+
               navigate("/pay", { state: { selectedCart } });
             }}
           >

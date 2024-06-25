@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import AdminSubHeader from "./adminSubHeader";
 import UploadForm from "./adminUploadForm";
-import { DELETE_PRODUCT_REQUEST } from "../reducers/adminProduct";
+import {
+  LOAD_PRODUCT_REQUEST,
+  DELETE_PRODUCT_REQUEST,
+} from "../reducers/adminProduct";
 // import Loading from "./loading";
 const AdminLists = () => {
   const location = useLocation();
@@ -38,6 +41,11 @@ const AdminLists = () => {
   const [openLoading, setOpenLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("");
 
+  useEffect(() => {
+    dispatch({
+      type: LOAD_PRODUCT_REQUEST,
+    });
+  }, [dispatch]);
   const deleteProduct = (code) => {
     dispatch({
       type: DELETE_PRODUCT_REQUEST,
@@ -46,6 +54,7 @@ const AdminLists = () => {
       },
     });
   };
+
   return (
     <>
       <AdminSubHeader data={"상품 관리"} />

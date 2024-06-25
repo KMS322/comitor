@@ -24,6 +24,7 @@ import AdminSignup from "./AdminPage/adminSignup.js";
 import AdminLists from "./AdminPage/adminLists.js";
 import AdminOrders from "./AdminPage/adminOrders.js";
 import AdminBanners from "./AdminPage/adminBanners.js";
+import AdminCoupons from "./AdminPage/adminCoupons.js";
 import AdminPopup from "./AdminPage/adminPopup.js";
 import ScrollToTop from "./ScrollToTop";
 
@@ -59,6 +60,7 @@ const App = () => {
         <Route path="/adminLists" element={<AdminLists />} />
         <Route path="/adminOrders" element={<AdminOrders />} />
         <Route path="/adminBanners" element={<AdminBanners />} />
+        <Route path="/adminCoupons" element={<AdminCoupons />} />
         {/* <Route path="/adminPopup" element={<AdminPopup />} /> */}
       </Routes>
       <Footer />

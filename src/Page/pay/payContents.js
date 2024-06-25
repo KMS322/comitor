@@ -7,9 +7,11 @@ import PayS3 from "./payS3";
 const PayContents = () => {
   const { me } = useSelector((state) => state.user);
   const location = useLocation();
-  const { selectedCart } = location.state || {};
-  const [deliveryInfo, setDeliveryInfo] = useState({});
+  const { selectedCart, price } = location.state || {};
+  console.log("selectedCart : ", selectedCart);
+  console.log("price : ", price);
 
+  const [deliveryInfo, setDeliveryInfo] = useState({});
   const handleDeliveryInfoChange = useCallback((info) => {
     setDeliveryInfo(info);
   }, []);
@@ -22,9 +24,9 @@ const PayContents = () => {
         <PayS2 onDeliveryInfoChange={handleDeliveryInfoChange} />
       )}
       {selectedCart ? (
-        <PayS3 carts={selectedCart} deliveryInfo={deliveryInfo} />
+        <PayS3 carts={selectedCart} deliveryInfo={deliveryInfo} price={price} />
       ) : (
-        <PayS3 deliveryInfo={deliveryInfo} />
+        <PayS3 deliveryInfo={deliveryInfo} price={price} />
       )}
     </>
   );

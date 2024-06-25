@@ -4,6 +4,7 @@ import MypageS1 from "./mypageS1";
 import MypageS2 from "./mypageS2";
 import MypageS3 from "./mypageS3";
 import MypageS4 from "./mypageS4";
+import MypageS5 from "./mypageS5";
 const MypageContents = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
@@ -38,6 +39,7 @@ const MypageContents = () => {
       <MypageS2 userId={userId} />
       {/* <MypageS3 carts = {uniquecarts} /> */}
       <MypageS4 />
+      <MypageS5 />
     </>
   );
 };

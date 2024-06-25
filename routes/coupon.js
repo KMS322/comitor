@@ -1,14 +1,20 @@
 const express = require("express");
 const multer = require("multer");
 const router = express.Router();
-const { Banner } = require("../models");
+const { Coupon } = require("../models");
+const { User } = require("../models");
 const fs = require("fs");
 const path = require("path");
 
 router.post("/add", async (req, res, next) => {
   try {
-    const addedBanner = await Banner.create({
-      banner_imgUrl: req.body.bannerImage,
+    const addedCoupon = await Coupon.create({
+      coupon_code: req.body.coupon_code,
+      coupon_name: req.body.coupon_name,
+      coupon_percent: req.body.percent,
+      coupon_price: req.body.price,
+      coupon_period: req.body.coupon_period,
+      coupon_imgUrl: req.body.couponImage,
     });
     res.status(201).send("ok");
   } catch (error) {
@@ -19,14 +25,13 @@ router.post("/add", async (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/images/bannerImage");
+    cb(null, "public/images/coupon");
   },
   filename: function (req, file, cb) {
     const originalName = file.originalname;
     cb(null, decodeURIComponent(originalName));
   },
 });
-
 const upload = multer({ storage: storage });
 router.post("/uploadFiles", upload.single("file"), async (req, res, next) => {
   try {
@@ -42,9 +47,8 @@ router.post("/uploadFiles", upload.single("file"), async (req, res, next) => {
 
 router.post("/load", async (req, res, next) => {
   try {
-    const allBanners = await Banner.findAll({});
-
-    res.status(200).json(allBanners);
+    const allCoupons = await Coupon.findAll({});
+    res.status(201).json(allCoupons);
   } catch (error) {
     console.error(error);
     next(error);
@@ -53,15 +57,14 @@ router.post("/load", async (req, res, next) => {
 
 router.post("/delete", async (req, res, next) => {
   try {
-    const selectedBanner = await Banner.findOne({
+    const selectedCoupon = await Coupon.findOne({
       where: { id: req.body.id },
     });
-    console.log("selectedBanner : ", selectedBanner);
 
     const filePath = path.join(
       __dirname,
-      "../public/images/bannerImage",
-      selectedBanner.banner_imgUrl
+      "../public/images/coupon",
+      selectedCoupon.coupon_imgUrl
     );
 
     fs.unlink(filePath, (err) => {
@@ -72,15 +75,38 @@ router.post("/delete", async (req, res, next) => {
       console.log("File deleted successfully");
     });
 
-    const deletedBanner = await Banner.destroy({
+    const deletedCoupon = await Coupon.destroy({
       where: {
         id: req.body.id,
       },
     });
-    res.status(200).json(deletedBanner);
+    res.status(200).json(deletedCoupon);
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
+
+router.post("/accept", async (req, res, next) => {
+  try {
+    const loginUser = await User.findOne({
+      where: { id: Number(req.body.userId) },
+    });
+    if (loginUser.user_coupon !== req.body.couponCode) {
+      console.log("AA");
+      await User.update(
+        {
+          user_coupon: req.body.couponCode,
+        },
+        { where: { id: Number(req.body.userId) } }
+      );
+    }
+
+    res.status(200).send("ok");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -40,7 +40,7 @@ function loadProductAPI() {
   return axios.post("/adminProduct/load");
 }
 
-function* loadProduct(action) {
+function* loadProduct() {
   try {
     const result = yield call(loadProductAPI);
     yield put({

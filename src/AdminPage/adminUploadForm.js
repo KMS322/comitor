@@ -78,7 +78,7 @@ const AdminUploadForm = ({ handlePopup }) => {
   useEffect(() => {
     if (uploadProductDone) {
       handlePopup();
-      navigate("/adminLists");
+      window.location.href = "/adminLists";
     }
   }, [uploadProductDone]);
   return (
