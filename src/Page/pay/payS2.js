@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../CSS/pay.css";
 import "../../CSS/pay_mobile.css";
 const PayS2 = ({ me, onDeliveryInfoChange }) => {
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState();
   const [deliveryRequest, setDeliveryRequest] = useState("문 앞");
   const [customRequest, setCustomRequest] = useState("");
   const [customName, setCustomName] = useState("");
@@ -11,6 +11,13 @@ const PayS2 = ({ me, onDeliveryInfoChange }) => {
   const handleRequestChange = (e) => {
     setDeliveryRequest(e.target.value);
   };
+  useEffect(() => {
+    if (me) {
+      setChecked(true);
+    } else {
+      setChecked(false);
+    }
+  }, [me]);
   useEffect(() => {
     const deliveryInfo = {
       name: checked ? me?.user_name || "" : customName,

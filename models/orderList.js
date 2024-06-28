@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       user_id: {
         type: DataTypes.STRING(30),
-        allowNull: false,
+        allowNull: true,
       },
       order_name: {
         type: DataTypes.STRING(30),

@@ -2,13 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LOAD_USER_ORDER_REQUEST } from "../../reducers/order";
 import { LOAD_PRODUCT_REQUEST } from "../../reducers/adminProduct";
+import { LOAD_REVIEW_REQUEST } from "../../reducers/review";
+import ReviewWriteModal from "./reviewWriteModal";
 import "../../CSS/mypage.css";
 const MypageS2 = ({ userId }) => {
   const dispatch = useDispatch();
   const { userProducts } = useSelector((state) => state.order);
   const { products } = useSelector((state) => state.adminProduct);
+  const { userReviews } = useSelector((state) => state.review);
   const [popupState, setPopupState] = useState(false);
   const [uniqueProducts, setUniqueProducts] = useState([]);
+  const [uniqueReviews, setUniqueReviews] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  console.log("uniqueReviews : ", uniqueReviews);
   useEffect(() => {
     dispatch({
       type: LOAD_USER_ORDER_REQUEST,
@@ -18,6 +24,12 @@ const MypageS2 = ({ userId }) => {
   useEffect(() => {
     dispatch({
       type: LOAD_PRODUCT_REQUEST,
+    });
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch({
+      type: LOAD_REVIEW_REQUEST,
+      data: { userId },
     });
   }, [dispatch]);
   useEffect(() => {
@@ -45,6 +57,27 @@ const MypageS2 = ({ userId }) => {
     setUniqueProducts(removeDuplicatesById(products));
   }, [products]);
 
+  useEffect(() => {
+    const removeDuplicatesById = (lists) => {
+      if (!lists || !Array.isArray(lists)) {
+        return [];
+      }
+      const uniqueLists = [];
+      const existingIds = [];
+
+      for (const list of lists) {
+        if (list && list.id && !existingIds.includes(list.id)) {
+          uniqueLists.push(list);
+          existingIds.push(list.id);
+        }
+      }
+
+      return uniqueLists;
+    };
+
+    setUniqueReviews(removeDuplicatesById(userReviews));
+  }, [userReviews]);
+
   const formatDateTime = (dateTime) => {
     const date = new Date(dateTime);
     const formattedDate = date.toLocaleDateString("ko-KR", {
@@ -58,6 +91,10 @@ const MypageS2 = ({ userId }) => {
       hour12: false,
     });
     return `${formattedDate} ${formattedTime}`;
+  };
+
+  const uploadReview = (code) => {
+    setModalOpen(code);
   };
 
   return (
@@ -79,6 +116,12 @@ const MypageS2 = ({ userId }) => {
                 const product = uniqueProducts.find(
                   (item) => item.product_code === userProduct.product_code
                 );
+                const review = uniqueReviews.find(
+                  (item) =>
+                    item.order_code === userProduct.order_code &&
+                    item.product_code === userProduct.product_code
+                );
+                console.log("review : ", review);
                 return (
                   <div className="content" key={index}>
                     <div className="item_box">
@@ -109,7 +152,19 @@ const MypageS2 = ({ userId }) => {
                       >
                         배송조회
                       </div>
-                      <div className="btn">리뷰쓰기</div>
+                      {review && review.review_comment === null ? (
+                        <div
+                          className="btn"
+                          onClick={() => {
+                            uploadReview(review.review_code);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          리뷰쓰기
+                        </div>
+                      ) : (
+                        <div className="btn">리뷰수정</div>
+                      )}
                     </div>
                   </div>
                 );
@@ -231,6 +286,9 @@ const MypageS2 = ({ userId }) => {
           }}
         />
       </div>
+      {modalOpen && (
+        <ReviewWriteModal setModalOepn={setModalOpen} id={modalOpen} />
+      )}
       <div
         className="black"
         style={{ display: popupState === true ? "block" : "none" }}

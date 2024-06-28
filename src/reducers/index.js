@@ -6,6 +6,7 @@ import order from "./order";
 import board from "./board";
 import banner from "./banner";
 import coupon from "./coupon";
+import review from "./review";
 
 const rootReducer = combineReducers({
   user,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   board,
   banner,
   coupon,
+  review,
 });
 
 export default rootReducer;

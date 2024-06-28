@@ -9,6 +9,9 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
   const location = useLocation();
   const { products } = useSelector((state) => state.adminProduct);
   const { coupons } = useSelector((state) => state.coupon);
+  const { me } = useSelector((state) => state.user);
+  console.log("me : ", me);
+  console.log("coupons : ", coupons);
   const selectedProduct = location.state && location.state.selectedProduct;
   const selectedCnt = location.state && location.state.selectedCnt;
   console.log("selectedProduct : ", selectedProduct);
@@ -37,13 +40,22 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
     if (onCoupon) {
       price = salePrice;
     }
+    if (carts) {
+      const data = {
+        carts,
+        deliveryInfo,
+        price: price,
+      };
+      setOrderData(data);
+    } else {
+      const data = {
+        carts: [selectedProduct],
+        deliveryInfo,
+        price: selectedProduct.product_salePrice * selectedCnt,
+      };
+      setOrderData(data);
+    }
 
-    const data = {
-      carts,
-      deliveryInfo,
-      price: price,
-    };
-    setOrderData(data);
     setModalOpen(true);
   };
 
@@ -245,7 +257,11 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
                 </p>
               </div>
               <p>{selectedCnt}</p>
-              <p>{coupons[0].coupon_name ? "1개" : "없음"}</p>
+              <p>
+                {me && me.user_coupon && coupons[0].coupon_name
+                  ? "1개"
+                  : "없음"}
+              </p>
               <p>무료</p>
               <p>
                 {salePrice
@@ -266,7 +282,7 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
                   addSale();
                 }}
               >
-                {onCoupon ? "쿠폰 사용 ●" : "쿠폰 사용 ○"}
+                {me ? (onCoupon ? "쿠폰 사용 ●" : "쿠폰 사용 ○") : ""}
               </p>
             </div>
             {onCoupon ? (
@@ -280,9 +296,14 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
             <div className="total_price_box">
               <p>총 결제금액</p>
               <p>
-                {price
-                  ? (totalPrice - price).toLocaleString()
-                  : totalPrice.toLocaleString()}
+                {salePrice
+                  ? (
+                      selectedProduct.product_salePrice * selectedCnt -
+                      salePrice
+                    ).toLocaleString()
+                  : (
+                      selectedProduct.product_salePrice * selectedCnt
+                    ).toLocaleString()}
                 원
               </p>
             </div>

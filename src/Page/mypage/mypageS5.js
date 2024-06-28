@@ -1,6 +1,6 @@
 import "../../CSS/mypage.css";
 import "../../CSS/mypage_mobile.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LOAD_COUPON_REQUEST } from "../../reducers/coupon";
 const MypageS5 = () => {
@@ -27,14 +27,22 @@ const MypageS5 = () => {
           <div className="content">
             <img />
             <div className="item_box">
-              <img src={`/images/coupon/${coupons[0].coupon_imgUrl}`} alt="" />
-              <p>{coupons[0].coupon_name}</p>
+              <img
+                src={`/images/coupon/${
+                  coupons.length > 0 && coupons[0].coupon_imgUrl
+                }`}
+                alt=""
+              />
+              <p>{coupons.length > 0 && coupons[0].coupon_name}</p>
             </div>
             <div className="price_box">
               <p>
-                {coupons[0].coupon_percent === 0
-                  ? `${coupons[0].coupon_price.toLocaleString()}원 `
-                  : `${coupons[0].coupon_percent}% `}
+                {coupons.length > 0 && coupons[0].coupon_percent === 0
+                  ? `${
+                      coupons.length > 0 &&
+                      coupons[0].coupon_price.toLocaleString()
+                    }원 `
+                  : `${coupons.length > 0 && coupons[0].coupon_percent}% `}
                 할인
               </p>
             </div>
