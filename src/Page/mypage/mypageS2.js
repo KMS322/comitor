@@ -14,7 +14,9 @@ const MypageS2 = ({ userId }) => {
   const [uniqueProducts, setUniqueProducts] = useState([]);
   const [uniqueReviews, setUniqueReviews] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  console.log("uniqueReviews : ", uniqueReviews);
+  console.log("uniqueReviews1 : ", uniqueReviews);
+  console.log("userReviews : ", userReviews);
+  console.log("userId : ", userId);
   useEffect(() => {
     dispatch({
       type: LOAD_USER_ORDER_REQUEST,
@@ -96,7 +98,9 @@ const MypageS2 = ({ userId }) => {
   const uploadReview = (code) => {
     setModalOpen(code);
   };
-
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   return (
     <>
       <div className="mypage_s2">
@@ -163,7 +167,7 @@ const MypageS2 = ({ userId }) => {
                           리뷰쓰기
                         </div>
                       ) : (
-                        <div className="btn">리뷰수정</div>
+                        <div className="btn">리뷰작성완료</div>
                       )}
                     </div>
                   </div>
@@ -287,7 +291,7 @@ const MypageS2 = ({ userId }) => {
         />
       </div>
       {modalOpen && (
-        <ReviewWriteModal setModalOepn={setModalOpen} id={modalOpen} />
+        <ReviewWriteModal handleModal={closeModal} id={modalOpen} />
       )}
       <div
         className="black"

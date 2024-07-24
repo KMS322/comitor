@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       product_code: {
         type: DataTypes.STRING(30),
@@ -20,6 +20,22 @@ module.exports = (sequelize, DataTypes) => {
       },
       review_comment: {
         type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      star_point: {
+        type: DataTypes.STRING(10),
+        allowNull: true,
+      },
+      review_imgUrl1: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
+      review_imgUrl2: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
+      review_imgUrl3: {
+        type: DataTypes.STRING(100),
         allowNull: true,
       },
     },

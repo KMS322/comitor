@@ -9,7 +9,7 @@ const ShopDetailContents = () => {
     <>
       <ShopDetailS1 productCode={code} />
       <ShopDetailS2 />
-      <ShopDetailS3 />
+      <ShopDetailS3 productCode={code} />
       <ShopDetailS4 />
     </>
   );

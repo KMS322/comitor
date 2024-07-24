@@ -7,11 +7,15 @@ export const initialState = {
   loadAllReviewLoading: false,
   loadAllReviewDone: false,
   loadAllReviewError: null,
+  loadProductReviewLoading: false,
+  loadProductReviewDone: false,
+  loadProductReviewError: null,
   uploadReviewLoading: false,
   uploadReviewDone: false,
   uploadReviewError: null,
   allReviews: [],
   userReviews: [],
+  productReviews: [],
 };
 
 export const LOAD_REVIEW_REQUEST = "LOAD_REVIEW_REQUEST";
@@ -21,6 +25,10 @@ export const LOAD_REVIEW_FAILURE = "LOAD_REVIEW_FAILURE";
 export const LOAD_ALL_REVIEW_REQUEST = "LOAD_ALL_REVIEW_REQUEST";
 export const LOAD_ALL_REVIEW_SUCCESS = "LOAD_ALL_REVIEW_SUCCESS";
 export const LOAD_ALL_REVIEW_FAILURE = "LOAD_ALL_REVIEW_FAILURE";
+
+export const LOAD_PRODUCT_REVIEW_REQUEST = "LOAD_PRODUCT_REVIEW_REQUEST";
+export const LOAD_PRODUCT_REVIEW_SUCCESS = "LOAD_PRODUCT_REVIEW_SUCCESS";
+export const LOAD_PRODUCT_REVIEW_FAILURE = "LOAD_PRODUCT_REVIEW_FAILURE";
 
 export const UPLOAD_REVIEW_REQUEST = "UPLOAD_REVIEW_REQUEST";
 export const UPLOAD_REVIEW_SUCCESS = "UPLOAD_REVIEW_SUCCESS";
@@ -56,6 +64,20 @@ const reducer = (state = initialState, action) => {
       case LOAD_ALL_REVIEW_FAILURE:
         draft.loadAllReviewLoading = false;
         draft.loadAllReviewError = action.error;
+        break;
+      case LOAD_PRODUCT_REVIEW_REQUEST:
+        draft.loadProductReviewLoading = true;
+        draft.loadProductReviewError = null;
+        draft.loadProductReviewDone = false;
+        break;
+      case LOAD_PRODUCT_REVIEW_SUCCESS:
+        draft.loadProductReviewLoading = false;
+        draft.loadProductReviewDone = true;
+        draft.productReviews = draft.productReviews.concat(action.data);
+        break;
+      case LOAD_PRODUCT_REVIEW_FAILURE:
+        draft.loadProductReviewLoading = false;
+        draft.loadProductReviewError = action.error;
         break;
       case UPLOAD_REVIEW_REQUEST:
         draft.uploadReviewLoading = true;

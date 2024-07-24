@@ -12,7 +12,6 @@ const MypageS5 = () => {
       type: LOAD_COUPON_REQUEST,
     });
   }, [dispatch]);
-  console.log("coupons : ", coupons);
   return (
     <div className="mypage_s5">
       <div id="pc" className="section_container">

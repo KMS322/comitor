@@ -56,7 +56,6 @@ router.post("/delete", async (req, res, next) => {
     const selectedBanner = await Banner.findOne({
       where: { id: req.body.id },
     });
-    console.log("selectedBanner : ", selectedBanner);
 
     const filePath = path.join(
       __dirname,

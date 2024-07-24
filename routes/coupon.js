@@ -93,7 +93,6 @@ router.post("/accept", async (req, res, next) => {
       where: { id: Number(req.body.userId) },
     });
     if (loginUser.user_coupon !== req.body.couponCode) {
-      console.log("AA");
       await User.update(
         {
           user_coupon: req.body.couponCode,

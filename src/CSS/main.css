@@ -18,43 +18,23 @@
   width: 100%;
   height: 100%;
 }
-.main_s2 .article {
-  width: 45%;
-  height: 53.48%;
+.main_s2 .btn_box {
+  width: 4vw;
+  height: 100%;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-}
-.main_s2 .article p:nth-child(1) {
-  font-size: 1.61vw;
-  font-weight: 500;
-  font-family: "NotoSansKr";
-}
-.main_s2 .article p:nth-child(2) {
-  font-size: 1.2vw;
-  font-weight: 400;
-  font-family: "NotoSansKr";
-  line-height: 2.5vw;
-  margin-top: 1.8vw;
-  letter-spacing: -0.01vw;
-}
-.main_s2 .article div {
-  width: 17.02%;
-  height: 16.42%;
-  margin: 0 auto;
-  margin-top: 1.4vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid white;
-  border-radius: 5vw;
-  font-size: 0.78vw;
-  font-weight: 400;
-  font-family: "NotoSansKr";
+  top: 0;
+  z-index: 2;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5vw;
+  color: white;
+  background-color: gray;
+  opacity: 0.4;
+}
+.main_s2 .btn_box:nth-child(3) {
+  right: 0;
 }
 
 /* main_s3 */
@@ -136,4 +116,53 @@
   font-family: "NotoSansKr";
   margin-top: 2.76vw;
   line-height: 1.85vw;
+}
+
+/* main_s5 */
+.main_s5 {
+  width: 100%;
+  height: auto;
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20.84vw;
+}
+.main_s5 > p {
+  font-size: 1.46vw;
+  font-weight: 500;
+  font-family: "NotoSansKr";
+  color: #1e0052;
+  text-align: center;
+  margin-top: 7.34vw;
+}
+.main_s5 .article_container {
+  width: 62.5%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4vw;
+}
+.main_s5 .article_container .article {
+  width: 23%;
+  height: 100%;
+  border-radius: 0.3vw;
+  box-shadow: 3px 3px 0px 0px rgba(30, 0, 82, 0.1);
+}
+.main_s5 .article_container .article img {
+  width: 100%;
+}
+.main_s5 .article_container .article .comment_box {
+  width: 100%;
+  height: 3.6vw;
+  font-size: 0.8vw;
+  line-height: 1.2vw;
+  margin-top: 0.5vw;
+  overflow: hidden; /* 넘친 부분 숨기기 */
+  white-space: pre-wrap; /* 줄바꿈 처리 */
+  word-wrap: break-word; /* 단어 단위로 줄바꿈 */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 표시할 줄 수 */
+  -webkit-box-orient: vertical;
+  padding-left: 0.3vw;
 }

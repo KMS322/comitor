@@ -2,6 +2,7 @@ import MainS1 from "./mainS1";
 import MainS2 from "./mainS2";
 import MainS3 from "./mainS3";
 import MainS4 from "./mainS4";
+import MainS5 from "./mainS5";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LOAD_COUPON_REQUEST } from "../../reducers/coupon";
@@ -36,9 +37,6 @@ const MainContents = () => {
     });
   }, [dispatch]);
   useEffect(() => {
-    // console.log("coupon.length : ", coupons.length);
-    // console.log("me : ", me);
-    // console.log("coupons : ", coupons);
     if (coupons.length > 0) {
       console.log("me : ", me);
       if (me === null) {
@@ -61,6 +59,7 @@ const MainContents = () => {
       <MainS2 />
       <MainS3 />
       <MainS4 />
+      <MainS5 />
       {modalOpen && (
         <CouponModal
           setModalOpen={setModalOpen}

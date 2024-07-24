@@ -10,17 +10,13 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
   const { products } = useSelector((state) => state.adminProduct);
   const { coupons } = useSelector((state) => state.coupon);
   const { me } = useSelector((state) => state.user);
-  console.log("me : ", me);
-  console.log("coupons : ", coupons);
   const selectedProduct = location.state && location.state.selectedProduct;
   const selectedCnt = location.state && location.state.selectedCnt;
-  console.log("selectedProduct : ", selectedProduct);
   const [totalPrice, setTotalPrice] = useState(0);
   const [salePrice, setSalePrice] = useState(0);
   const [onCoupon, setOnCoupon] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [orderData, setOrderData] = useState();
-  console.log("carts : ", carts);
   useEffect(() => {
     let total = 0;
     carts &&
@@ -42,6 +38,7 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
     }
     if (carts) {
       const data = {
+        me,
         carts,
         deliveryInfo,
         price: price,
@@ -50,6 +47,7 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
     } else {
       const data = {
         carts: [selectedProduct],
+        me,
         deliveryInfo,
         price: selectedProduct.product_salePrice * selectedCnt,
       };

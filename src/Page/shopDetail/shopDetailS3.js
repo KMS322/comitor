@@ -1,5 +1,39 @@
 import "../../CSS/shopDetail.css";
-const ShopDetailS3 = () => {
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_PRODUCT_REVIEW_REQUEST } from "../../reducers/review";
+const ShopDetailS3 = ({ productCode }) => {
+  const dispatch = useDispatch();
+  const { productReviews } = useSelector((state) => state.review);
+  const [uniqueReviews, setUniqueReviews] = useState([]);
+  console.log("uniqueReviews : ", uniqueReviews);
+
+  useEffect(() => {
+    const removeDuplicatesById = (lists) => {
+      if (!lists || !Array.isArray(lists)) {
+        return [];
+      }
+      const uniqueLists = [];
+      const existingIds = [];
+
+      for (const list of lists) {
+        if (list && list.id && !existingIds.includes(list.id)) {
+          uniqueLists.push(list);
+          existingIds.push(list.id);
+        }
+      }
+
+      return uniqueLists;
+    };
+
+    setUniqueReviews(removeDuplicatesById(productReviews));
+  }, [productReviews]);
+  useEffect(() => {
+    dispatch({
+      type: LOAD_PRODUCT_REVIEW_REQUEST,
+      data: { productCode },
+    });
+  }, [dispatch]);
   return (
     <div className="shopDetail_s3">
       <div className="section_container">
@@ -9,108 +43,48 @@ const ShopDetailS3 = () => {
           <p>최신순</p>
           <p>별점순</p>
         </div>
-        <div className="row_content">
-          <div className="point_box">
-            <img src="/images/shopDetail/star_img.png" alt="" />
-            <p>5</p>
-          </div>
-          <p>
-            아이가 긁어서 피부발진이나 빨갛게 올라온 곳에 바르면 하루만에
-            <br />
-            진정이 되서 놀럤어요~ 병풀 추출물 등이 들어있어 문제성 피부에
-            좋아요~
-          </p>
-          <div className="img_box">
-            <img src="/images/shopDetail/review_img1.jpg" alt="" />
-            <img src="/images/shopDetail/review_img2.jpg" alt="" />
-          </div>
-          <div className="sub_box">
-            <div className="sub_up">
-              <img src="/images/shopDetail/hand_up.png" alt="" />
-              <p>도움돼요</p>
-              <p>15</p>
-            </div>
-            <div className="sub_down">
-              <img src="/images/shopDetail/hand_down.png" alt="" />
-              <p>도움안돼요</p>
-              <p>12</p>
-            </div>
-            <div className="sub_comment">
-              <p>댓글</p>
-              <p>0</p>
-              <img src="/images/shopDetail/arrow_down.png" alt="" />
-            </div>
-          </div>
-        </div>
-        <div className="row_content">
-          <div className="point_box">
-            <img src="/images/shopDetail/star_img.png" alt="" />
-            <p>5</p>
-          </div>
-          <p>
-            아이가 긁어서 피부발진이나 빨갛게 올라온 곳에 바르면 하루만에
-            <br />
-            진정이 되서 놀럤어요~ 병풀 추출물 등이 들어있어 문제성 피부에
-            좋아요~
-          </p>
-          <div className="img_box">
-            <img src="/images/shopDetail/review_img1.jpg" alt="" />
-            <img src="/images/shopDetail/review_img2.jpg" alt="" />
-          </div>
-          <div className="sub_box">
-            <div className="sub_up">
-              <img src="/images/shopDetail/hand_up.png" alt="" />
-              <p>도움돼요</p>
-              <p>15</p>
-            </div>
-            <div className="sub_down">
-              <img src="/images/shopDetail/hand_down.png" alt="" />
-              <p>도움안돼요</p>
-              <p>12</p>
-            </div>
-            <div className="sub_comment">
-              <p>댓글</p>
-              <p>0</p>
-              <img src="/images/shopDetail/arrow_down.png" alt="" />
-            </div>
-          </div>
-        </div>
-        <div className="row_content">
-          <div className="point_box">
-            <img src="/images/shopDetail/star_img.png" alt="" />
-            <p>5</p>
-          </div>
-          <p>
-            아이가 긁어서 피부발진이나 빨갛게 올라온 곳에 바르면 하루만에
-            <br />
-            진정이 되서 놀럤어요~ 병풀 추출물 등이 들어있어 문제성 피부에
-            좋아요~
-          </p>
-          <div className="img_box">
-            <img src="/images/shopDetail/review_img1.jpg" alt="" />
-            <img src="/images/shopDetail/review_img2.jpg" alt="" />
-          </div>
-          <div className="sub_box">
-            <div className="sub_up">
-              <img src="/images/shopDetail/hand_up.png" alt="" />
-              <p>도움돼요</p>
-              <p>15</p>
-            </div>
-            <div className="sub_down">
-              <img src="/images/shopDetail/hand_down.png" alt="" />
-              <p>도움안돼요</p>
-              <p>12</p>
-            </div>
-            <div className="sub_comment">
-              <p>댓글</p>
-              <p>0</p>
-              <img src="/images/shopDetail/arrow_down.png" alt="" />
-            </div>
-          </div>
-        </div>
-        <div className="page_num">
-          <p>1</p>
-        </div>
+        {uniqueReviews &&
+          uniqueReviews.map((review, index) => {
+            return (
+              <div className="row_content" key={index}>
+                <div className="star_box" style={{ marginTop: "1vw" }}>
+                  {[...Array(5)].map((_, index) => (
+                    <p style={{ cursor: "inherit" }} key={index}>
+                      {review.star_point > index ? "★" : "☆"}
+                    </p>
+                  ))}
+                </div>
+                <div className="comment_box">{review.review_comment}</div>
+
+                <div className="img_box">
+                  {review.review_imgUrl1 !== "0" ? (
+                    <img
+                      src={`/images/reviewImage/${review.review_imgUrl1}`}
+                      alt=""
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {review.review_imgUrl2 !== "0" ? (
+                    <img
+                      src={`/images/reviewImage/${review.review_imgUrl2}`}
+                      alt=""
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {review.review_imgUrl3 !== "0" ? (
+                    <img
+                      src={`/images/reviewImage/${review.review_imgUrl3}`}
+                      alt=""
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

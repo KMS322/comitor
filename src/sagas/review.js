@@ -7,6 +7,9 @@ import {
   LOAD_ALL_REVIEW_REQUEST,
   LOAD_ALL_REVIEW_SUCCESS,
   LOAD_ALL_REVIEW_FAILURE,
+  LOAD_PRODUCT_REVIEW_REQUEST,
+  LOAD_PRODUCT_REVIEW_SUCCESS,
+  LOAD_PRODUCT_REVIEW_FAILURE,
   UPLOAD_REVIEW_REQUEST,
   UPLOAD_REVIEW_SUCCESS,
   UPLOAD_REVIEW_FAILURE,
@@ -36,13 +39,13 @@ function* watchLoadReview() {
   yield takeLatest(LOAD_REVIEW_REQUEST, loadReview);
 }
 
-function loadAllReviewAPI(data) {
-  return axios.post("/review/loadAll", data);
+function loadAllReviewAPI() {
+  return axios.get("/review/loadAll");
 }
 
-function* loadAllReview(action) {
+function* loadAllReview() {
   try {
-    const result = yield call(loadAllReviewAPI, action.data);
+    const result = yield call(loadAllReviewAPI);
     yield put({
       type: LOAD_ALL_REVIEW_SUCCESS,
       data: result.data,
@@ -58,6 +61,30 @@ function* loadAllReview(action) {
 
 function* watchLoadAllReview() {
   yield takeLatest(LOAD_ALL_REVIEW_REQUEST, loadAllReview);
+}
+
+function loadProductReviewAPI(data) {
+  return axios.post("/review/loadProduct", data);
+}
+
+function* loadProductReview(action) {
+  try {
+    const result = yield call(loadProductReviewAPI, action.data);
+    yield put({
+      type: LOAD_PRODUCT_REVIEW_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_PRODUCT_REVIEW_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchLoadProductReview() {
+  yield takeLatest(LOAD_PRODUCT_REVIEW_REQUEST, loadProductReview);
 }
 
 function uploadReviewAPI(data) {
@@ -89,5 +116,6 @@ export default function* reviewSaga() {
     fork(watchLoadReview),
     fork(watchLoadAllReview),
     fork(watchUploadReview),
+    fork(watchLoadProductReview),
   ]);
 }

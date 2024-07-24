@@ -11,7 +11,7 @@ const MypageContents = () => {
   // const { carts } = useSelector((state) => state.cart);
   // const [uniquecarts, setUniquecarts] = useState([]);
 
-  const userId = me && me.id;
+  const userId = me && me.user_id;
 
   // useEffect(() => {
   //   const removeDuplicatesById = (lists) => {

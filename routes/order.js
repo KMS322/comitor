@@ -7,7 +7,8 @@ const { Review } = require("../models");
 
 router.post("/add", async (req, res, next) => {
   try {
-    const { carts, deliveryInfo } = req.body.orderInfo;
+    const { carts, deliveryInfo, me } = req.body.orderInfo;
+    console.log("req.body.orderInfo : ", req.body.orderInfo);
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
@@ -17,11 +18,11 @@ router.post("/add", async (req, res, next) => {
     const seconds = String(now.getSeconds()).padStart(2, "0");
     const currentTime = `${year}${month}${day}-${hours}:${minutes}:${seconds}`;
     const userId = carts[0].user_id ? carts[0].user_id : "non";
-    const order_code = `${currentTime}/${userId}`;
+    const order_code = `${currentTime}/${me.user_id}`;
     await OrderList.create({
       order_id: 1,
       order_code: order_code,
-      user_id: carts[0].user_id && "non",
+      user_id: me ? me.user_id : "non",
       order_name: deliveryInfo.name,
       order_phone: deliveryInfo.phone,
       order_address: deliveryInfo.address,
@@ -31,19 +32,21 @@ router.post("/add", async (req, res, next) => {
       await OrderProduct.create({
         order_code: order_code,
         product_code: cart.product_code,
-        product_cnt: cart.product_cnt,
+        product_cnt: cart.product_saleCnt === 0 ? 1 : cart.product_saleCnt,
       });
       await Cart.destroy({
         where: {
           id: cart.id,
         },
       });
-      await Review.create({
-        review_code: `${order_code}/review`,
-        order_code: order_code,
-        product_code: cart.product_code,
-        user_id: cart.user_id,
-      });
+      if (me) {
+        await Review.create({
+          review_code: `${order_code}/review`,
+          order_code: order_code,
+          product_code: cart.product_code,
+          user_id: me.user_id,
+        });
+      }
     }
 
     res.status(201).send("ok");

@@ -1,34 +1,77 @@
-import { useNavigate } from "react-router-dom";
 import "../../CSS/main.css";
 import "../../CSS/main_mobile.css";
-
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_BANNER_REQUEST } from "../../reducers/banner";
 const MainS2 = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { banners } = useSelector((state) => state.banner);
+  const [currentImg, setCurrentImg] = useState(0);
 
+  const removeDuplicatesById = (lists) => {
+    if (!lists || !Array.isArray(lists)) {
+      return [];
+    }
+    const uniqueLists = [];
+    const existingIds = [];
+
+    for (const list of lists) {
+      if (list && list.id && !existingIds.includes(list.id)) {
+        uniqueLists.push(list);
+        existingIds.push(list.id);
+      }
+    }
+
+    return uniqueLists;
+  };
+  const uniqueBanners = removeDuplicatesById(banners);
+  const bannerCnt = uniqueBanners.length > 0 && uniqueBanners.length;
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_BANNER_REQUEST,
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (currentImg < bannerCnt - 1) {
+        setCurrentImg(currentImg + 1);
+      } else {
+        setCurrentImg(0);
+      }
+    }, 3000);
+
+    // 컴포넌트가 언마운트될 때 인터벌을 정리합니다.
+    return () => clearInterval(interval);
+  }, [currentImg]);
   return (
     <div className="main_s2">
-      <img src="/images/main/s2_bg.png" alt="" />
-      <div className="article">
-        <p>Brand Story</p>
-        <p id="pc">
-          더우분투가 가지는 핵심가치는 함께하는 것에 있습니다.
-          <br />
-          반려동물과 사람이 함께하는 공간인 자연에 공헌하는 것을 궁극적인 목표로
-          삼고 있습니다.
-        </p>
-        <p id="mobile">
-          더우분투가 가지는 핵심가치는 함께하는 것에 있습니다.
-          <br />
-          반려동물과 사람이 함께하는 공간인 자연에 공헌하는 것을
-          <br /> 궁극적인 목표로 삼고 있습니다.
-        </p>
-        <div
-          onClick={() => {
-            navigate("/about");
-          }}
-        >
-          view more
-        </div>
+      <div
+        className="btn_box"
+        onClick={() => {
+          if (currentImg > 0) {
+            setCurrentImg(currentImg - 1);
+          }
+        }}
+      >
+        {"<"}
+      </div>
+      {uniqueBanners && (
+        <img
+          src={`/images/bannerImage/${
+            uniqueBanners.length > 0 && uniqueBanners[currentImg].banner_imgUrl
+          }`}
+          alt=""
+        />
+      )}
+      <div
+        className="btn_box"
+        onClick={() => {
+          if (currentImg < bannerCnt - 1) setCurrentImg(currentImg + 1);
+        }}
+      >
+        {">"}
       </div>
     </div>
   );

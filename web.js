@@ -8,7 +8,6 @@ app.use(express.static(path.join(__dirname, "build")));
 // 모든 경로에 대해 index.html 제공 (React Router를 위한 설정)
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
-  console.log("get");
 });
 
 // 포트 설정
