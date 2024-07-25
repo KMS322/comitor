@@ -13,6 +13,9 @@ import {
   UPLOAD_REVIEW_REQUEST,
   UPLOAD_REVIEW_SUCCESS,
   UPLOAD_REVIEW_FAILURE,
+  DELETE_REVIEW_REQUEST,
+  DELETE_REVIEW_SUCCESS,
+  DELETE_REVIEW_FAILURE,
 } from "../reducers/review";
 
 function loadReviewAPI(data) {
@@ -111,11 +114,36 @@ function* watchUploadReview() {
   yield takeLatest(UPLOAD_REVIEW_REQUEST, uploadReview);
 }
 
+function deleteReviewAPI(data) {
+  return axios.post("/review/delete", data);
+}
+
+function* deleteReview(action) {
+  try {
+    const result = yield call(deleteReviewAPI, action.data);
+    yield put({
+      type: DELETE_REVIEW_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: DELETE_REVIEW_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchDeleteReview() {
+  yield takeLatest(DELETE_REVIEW_REQUEST, deleteReview);
+}
+
 export default function* reviewSaga() {
   yield all([
     fork(watchLoadReview),
     fork(watchLoadAllReview),
     fork(watchUploadReview),
     fork(watchLoadProductReview),
+    fork(watchDeleteReview),
   ]);
 }

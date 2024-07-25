@@ -25,6 +25,7 @@ import AdminLists from "./AdminPage/adminLists.js";
 import AdminOrders from "./AdminPage/adminOrders.js";
 import AdminBanners from "./AdminPage/adminBanners.js";
 import AdminCoupons from "./AdminPage/adminCoupons.js";
+import AdminReviews from "./AdminPage/adminReviews.js";
 import Redirection from "./Page/login/redirection.js";
 import AdminPopup from "./AdminPage/adminPopup.js";
 import ScrollToTop from "./ScrollToTop";
@@ -62,6 +63,7 @@ const App = () => {
         <Route path="/adminOrders" element={<AdminOrders />} />
         <Route path="/adminBanners" element={<AdminBanners />} />
         <Route path="/adminCoupons" element={<AdminCoupons />} />
+        <Route path="/adminReviews" element={<AdminReviews />} />
         <Route path="/auth/*" element={<Redirection />} />
         {/* <Route path="/adminPopup" element={<AdminPopup />} /> */}
       </Routes>

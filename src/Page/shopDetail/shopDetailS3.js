@@ -6,7 +6,22 @@ const ShopDetailS3 = ({ productCode }) => {
   const dispatch = useDispatch();
   const { productReviews } = useSelector((state) => state.review);
   const [uniqueReviews, setUniqueReviews] = useState([]);
+  const [sort, setSort] = useState(true);
+  const [sortedReviews, setSortedReviews] = useState([]);
   console.log("uniqueReviews : ", uniqueReviews);
+  useEffect(() => {
+    if (sort) {
+      setSortedReviews(
+        [...uniqueReviews].sort(
+          (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+        )
+      );
+    } else {
+      setSortedReviews(
+        [...uniqueReviews].sort((a, b) => b.star_point - a.star_point)
+      );
+    }
+  }, [uniqueReviews, sort]);
 
   useEffect(() => {
     const removeDuplicatesById = (lists) => {
@@ -25,8 +40,10 @@ const ShopDetailS3 = ({ productCode }) => {
 
       return uniqueLists;
     };
-
-    setUniqueReviews(removeDuplicatesById(productReviews));
+    const selectedReviews = productReviews.filter(
+      (item) => item.product_code === productCode
+    );
+    setUniqueReviews(removeDuplicatesById(selectedReviews));
   }, [productReviews]);
   useEffect(() => {
     dispatch({
@@ -39,12 +56,25 @@ const ShopDetailS3 = ({ productCode }) => {
       <div className="section_container">
         <p>Review</p>
         <div className="row_head">
-          <p>추천순</p>
-          <p>최신순</p>
-          <p>별점순</p>
+          <p
+            onClick={() => {
+              setSort(true);
+            }}
+            style={{ color: sort ? "black" : "#919191" }}
+          >
+            최신순
+          </p>
+          <p
+            onClick={() => {
+              setSort(false);
+            }}
+            style={{ color: sort ? "#919191" : "black" }}
+          >
+            별점순
+          </p>
         </div>
-        {uniqueReviews &&
-          uniqueReviews.map((review, index) => {
+        {sortedReviews &&
+          sortedReviews.map((review, index) => {
             return (
               <div className="row_content" key={index}>
                 <div className="star_box" style={{ marginTop: "1vw" }}>
@@ -65,7 +95,7 @@ const ShopDetailS3 = ({ productCode }) => {
                   ) : (
                     ""
                   )}
-                  {review.review_imgUrl2 !== "0" ? (
+                  {review.review_imgUrl2 && review.review_imgUrl2 !== "0" ? (
                     <img
                       src={`/images/reviewImage/${review.review_imgUrl2}`}
                       alt=""
@@ -73,7 +103,7 @@ const ShopDetailS3 = ({ productCode }) => {
                   ) : (
                     ""
                   )}
-                  {review.review_imgUrl3 !== "0" ? (
+                  {review.review_imgUrl3 && review.review_imgUrl3 !== "0" ? (
                     <img
                       src={`/images/reviewImage/${review.review_imgUrl3}`}
                       alt=""

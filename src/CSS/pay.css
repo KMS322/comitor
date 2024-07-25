@@ -281,7 +281,16 @@
   background-color: #000035;
   color: white;
 }
-
+.pay_s3 .coupon_box {
+  width: 12%;
+  border: 1px solid red;
+  margin-left: auto;
+}
+.pay_s3 .sale_price_box {
+  width: 12%;
+  margin-left: auto;
+  border: 1px solid blue;
+}
 /* payModal */
 /* modal_background */
 .payModal_background {

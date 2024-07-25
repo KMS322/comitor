@@ -6,10 +6,13 @@ import { LOAD_REVIEW_REQUEST } from "../../reducers/review";
 import ReviewWriteModal from "./reviewWriteModal";
 import "../../CSS/mypage.css";
 const MypageS2 = ({ userId }) => {
+  console.log("pages2 속 userId : ", userId);
   const dispatch = useDispatch();
   const { userProducts } = useSelector((state) => state.order);
   const { products } = useSelector((state) => state.adminProduct);
-  const { userReviews } = useSelector((state) => state.review);
+  const { userReviews, uploadReviewDone } = useSelector(
+    (state) => state.review
+  );
   const [popupState, setPopupState] = useState(false);
   const [uniqueProducts, setUniqueProducts] = useState([]);
   const [uniqueReviews, setUniqueReviews] = useState([]);
@@ -17,6 +20,11 @@ const MypageS2 = ({ userId }) => {
   console.log("uniqueReviews1 : ", uniqueReviews);
   console.log("userReviews : ", userReviews);
   console.log("userId : ", userId);
+  useEffect(() => {
+    if (uploadReviewDone) {
+      window.location.href = "/mypage";
+    }
+  }, [uploadReviewDone]);
   useEffect(() => {
     dispatch({
       type: LOAD_USER_ORDER_REQUEST,
@@ -113,7 +121,7 @@ const MypageS2 = ({ userId }) => {
               <p>상품정보</p>
               <p>주문일자</p>
               <p>주문금액(수량)</p>
-              <p>주문상태</p>
+              <p>리뷰상태</p>
             </div>
             {userProducts &&
               userProducts.map((userProduct, index) => {
@@ -131,31 +139,34 @@ const MypageS2 = ({ userId }) => {
                     <div className="item_box">
                       <div className="img_box">
                         <img
-                          src={`/images/mainImage/${product.product_imgUrl}`}
+                          src={`/images/mainImage/${
+                            product && product.product_imgUrl
+                          }`}
                           alt=""
                         />
                       </div>
                       <p
                       // dangerouslySetInnerHTML={{ __html: orderedProduct.name }}
                       >
-                        {product.product_name}
+                        {product && product.product_name}
                       </p>
                     </div>
                     <p>{formatDateTime(userProduct.createdAt)}</p>
                     <p>
-                      {product.product_salePrice.toLocaleString()}원(
+                      {product && product.product_salePrice.toLocaleString()}원(
                       {userProduct.product_cnt}개)
                     </p>
                     <div className="order_state">
-                      <p>출고 준비중</p>
-                      <div
+                      <p></p>
+                      {/* <p>출고 준비중</p> */}
+                      {/* <div
                         className="btn"
                         onClick={() => {
                           setPopupState(!popupState);
                         }}
                       >
                         배송조회
-                      </div>
+                      </div> */}
                       {review && review.review_comment === null ? (
                         <div
                           className="btn"
@@ -169,13 +180,14 @@ const MypageS2 = ({ userId }) => {
                       ) : (
                         <div className="btn">리뷰작성완료</div>
                       )}
+                      <div></div>
                     </div>
                   </div>
                 );
               })}
           </div>
         </div>
-        <div id="mobile" className="article_container">
+        {/* <div id="mobile" className="article_container">
           <div className="title_box">
             <p>주문 내역</p>
             <p>최근 3개월만 표시됩니다</p>
@@ -206,7 +218,7 @@ const MypageS2 = ({ userId }) => {
               <div className="btn">리뷰쓰기</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div
         className="delivery_popup"

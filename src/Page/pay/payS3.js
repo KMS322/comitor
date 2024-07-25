@@ -5,8 +5,17 @@ import PayModal from "./payModal";
 import "../../CSS/pay.css";
 import "../../CSS/pay_mobile.css";
 const PayS3 = ({ carts, deliveryInfo, price }) => {
+  console.log("carts : ", carts);
+  console.log("deliveryInfo : ", deliveryInfo);
+  console.log("price : ", price);
   const navigate = useNavigate();
   const location = useLocation();
+  console.log("location : ", location);
+  const noCouponPrice =
+    location.state && location.state.selectedProduct.product_salePrice;
+  const noCouponCnt = location.state && location.state.selectedCnt;
+  console.log("noCouponPrice : ", noCouponPrice);
+  console.log("noCouponCnt : ", noCouponCnt);
   const { products } = useSelector((state) => state.adminProduct);
   const { coupons } = useSelector((state) => state.coupon);
   const { me } = useSelector((state) => state.user);
@@ -28,7 +37,11 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
           total += product.product_salePrice * cart.product_cnt;
         }
       });
-    setTotalPrice(total);
+    if (!carts) {
+      setTotalPrice(noCouponPrice * selectedCnt);
+    } else {
+      setTotalPrice(total);
+    }
   }, [carts]);
 
   const handlePaymentClick = () => {
@@ -61,8 +74,12 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
     setOnCoupon(!onCoupon);
     let sale = 0;
     if (coupons[0].coupon_percent === 0) {
+      console.log("aa");
       sale = coupons[0].coupon_price;
     } else if (coupons[0].coupon_price === 0) {
+      console.log("bB");
+      console.log("totalPrice : ", totalPrice);
+      console.log("coupons[0] : ", coupons[0]);
       sale = (totalPrice * coupons[0].coupon_percent) / 100;
     }
     setSalePrice(sale);

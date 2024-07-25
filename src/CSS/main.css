@@ -140,7 +140,12 @@
   width: 62.5%;
   height: auto;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  scroll-behavior: smooth;
   margin-top: 4vw;
 }
 .main_s5 .article_container .article {
@@ -148,6 +153,12 @@
   height: 100%;
   border-radius: 0.3vw;
   box-shadow: 3px 3px 0px 0px rgba(30, 0, 82, 0.1);
+  flex: 0 0 23%;
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  padding: 10px;
+  margin-right: 2.5%;
+  border: 1px solid rgba(30, 0, 82, 0.1);
 }
 .main_s5 .article_container .article img {
   width: 100%;
@@ -165,4 +176,24 @@
   -webkit-line-clamp: 3; /* 표시할 줄 수 */
   -webkit-box-orient: vertical;
   padding-left: 0.3vw;
+}
+.main_s5 .controls {
+  width: 10vw;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3vw;
+}
+
+.main_s5 .controls button {
+  padding: 10px;
+  background-color: #000035;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.main_s5 .controls button:disabled {
+  background-color: #c0c0c0;
+  cursor: not-allowed;
 }

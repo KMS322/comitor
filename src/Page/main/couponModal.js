@@ -4,14 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { ACCEPT_COUPON_REQUEST } from "../../reducers/coupon";
 const CouponModal = ({ setModalOpen, coupon, user }) => {
   const userId = user && user.id;
+  console.log("userId : ", userId);
   const couponCode = coupon.length > 0 && coupon[0].coupon_code;
   const dispatch = useDispatch();
   const { acceptCouponDone } = useSelector((state) => state.coupon);
   const acceptCoupon = () => {
-    dispatch({
-      type: ACCEPT_COUPON_REQUEST,
-      data: { userId, couponCode },
-    });
+    if (userId) {
+      dispatch({
+        type: ACCEPT_COUPON_REQUEST,
+        data: { userId, couponCode },
+      });
+    } else {
+      alert("쿠폰을 받으시려면 로그인을 하셔야 합니다.");
+    }
   };
   useEffect(() => {
     if (acceptCouponDone) {

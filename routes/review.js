@@ -96,4 +96,72 @@ router.post("/upload", async (req, res, next) => {
   }
 });
 
+router.post("/delete", async (req, res, next) => {
+  try {
+    const selectedReview = await Review.findOne({
+      where: { id: req.body.id },
+    });
+    // console.log("selectedReview : ", selectedReview.id);
+    let filePath1, filePath2, filePath3;
+    if (selectedReview.review_imgUrl1 && selectedReview.review_imgUrl1 !== 0) {
+      filePath1 = path.join(
+        __dirname,
+        "../public/images/reviewImage",
+        selectedReview.review_imgUrl1
+      );
+    }
+    if (selectedReview.review_imgUrl2 && selectedReview.review_imgUrl2 !== 0) {
+      filePath2 = path.join(
+        __dirname,
+        "../public/images/reviewImage",
+        selectedReview.review_imgUrl2
+      );
+    }
+    if (selectedReview.review_imgUrl3 && selectedReview.review_imgUrl3 !== 0) {
+      filePath3 = path.join(
+        __dirname,
+        "../public/images/reviewImage",
+        selectedReview.review_imgUrl3
+      );
+    }
+    if (filePath1) {
+      fs.unlink(filePath1, (err) => {
+        if (err) {
+          console.error("Error deleting file:", err);
+          return next(err);
+        }
+        console.log("File deleted successfully");
+      });
+    }
+    if (filePath2) {
+      fs.unlink(filePath2, (err) => {
+        if (err) {
+          console.error("Error deleting file:", err);
+          return next(err);
+        }
+        console.log("File deleted successfully");
+      });
+    }
+
+    if (filePath3) {
+      fs.unlink(filePath3, (err) => {
+        if (err) {
+          console.error("Error deleting file:", err);
+          return next(err);
+        }
+        console.log("File deleted successfully");
+      });
+    }
+
+    const deletedReview = await Review.destroy({
+      where: {
+        id: req.body.id,
+      },
+    });
+    res.status(200).json(deletedReview);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
 module.exports = router;

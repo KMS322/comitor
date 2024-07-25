@@ -279,12 +279,12 @@
 .shopDetail_s3 .section_container .row_head > p {
   font-size: 0.94vw;
   font-weight: 500;
-  color: #919191;
+  /* color: #919191; */
   cursor: pointer;
   margin-right: 2.08vw;
 }
 .shopDetail_s3 .section_container .row_head > p:nth-child(1) {
-  color: black;
+  /* color: black; */
 }
 .shopDetail_s3 .section_container .row_content {
   width: 100%;

@@ -35,7 +35,11 @@ passportConfig();
 
 app.use(
   cors({
-    origin: ["http://localhost", "http://localhost:3000"],
+    origin: [
+      "http://localhost",
+      "http://localhost:3000",
+      "http://localhost:81",
+    ],
     credentials: true,
   })
 );

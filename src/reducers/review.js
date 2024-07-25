@@ -13,6 +13,9 @@ export const initialState = {
   uploadReviewLoading: false,
   uploadReviewDone: false,
   uploadReviewError: null,
+  deleteReviewLoading: false,
+  deleteReviewDone: false,
+  deleteReviewError: null,
   allReviews: [],
   userReviews: [],
   productReviews: [],
@@ -33,6 +36,10 @@ export const LOAD_PRODUCT_REVIEW_FAILURE = "LOAD_PRODUCT_REVIEW_FAILURE";
 export const UPLOAD_REVIEW_REQUEST = "UPLOAD_REVIEW_REQUEST";
 export const UPLOAD_REVIEW_SUCCESS = "UPLOAD_REVIEW_SUCCESS";
 export const UPLOAD_REVIEW_FAILURE = "UPLOAD_REVIEW_FAILURE";
+
+export const DELETE_REVIEW_REQUEST = "DELETE_REVIEW_REQUEST";
+export const DELETE_REVIEW_SUCCESS = "DELETE_REVIEW_SUCCESS";
+export const DELETE_REVIEW_FAILURE = "DELETE_REVIEW_FAILURE";
 
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
@@ -91,6 +98,22 @@ const reducer = (state = initialState, action) => {
       case UPLOAD_REVIEW_FAILURE:
         draft.uploadReviewLoading = false;
         draft.uploadReviewError = action.error;
+        break;
+      case DELETE_REVIEW_REQUEST:
+        draft.deleteReviewLoading = true;
+        draft.deleteReviewError = null;
+        draft.deleteReviewDone = false;
+        break;
+      case DELETE_REVIEW_SUCCESS:
+        draft.deleteReviewLoading = false;
+        draft.deleteReviewDone = true;
+        draft.allReviews = draft.allReviews.filter(
+          (item) => item.id !== action.data.id
+        );
+        break;
+      case DELETE_REVIEW_FAILURE:
+        draft.deleteReviewLoading = false;
+        draft.deleteReviewError = action.error;
         break;
       default:
         return state;

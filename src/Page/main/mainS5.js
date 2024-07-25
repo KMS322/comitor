@@ -7,6 +7,8 @@ const MainS5 = () => {
   const dispatch = useDispatch();
   const { allReviews } = useSelector((state) => state.review);
   const [uniqueReviews, setUniqueReviews] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const reviewsToShow = 4;
   console.log("uniqueReviews : ", uniqueReviews);
 
   useEffect(() => {
@@ -34,29 +36,49 @@ const MainS5 = () => {
 
     setUniqueReviews(removeDuplicatesById(allReviews));
   }, [allReviews]);
+
+  const handlePrev = () => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - reviewsToShow, 0));
+  };
+
+  const handleNext = () => {
+    setStartIndex((prevIndex) =>
+      Math.min(prevIndex + reviewsToShow, uniqueReviews.length - reviewsToShow)
+    );
+  };
   return (
     <div className="main_s5">
       <p>REVIEW</p>
       <div className="article_container">
-        {uniqueReviews &&
-          uniqueReviews.map((review, index) => {
-            return (
-              <div className="article" key={index}>
-                <img
-                  src={`/images/reviewImage/${review.review_imgUrl1}`}
-                  alt=""
-                />
-                <div className="star_box">
-                  {[...Array(5)].map((_, index) => (
-                    <p style={{ cursor: "inherit" }} key={index}>
-                      {review.star_point > index ? "★" : "☆"}
-                    </p>
-                  ))}
-                </div>
-                <div className="comment_box">{review.review_comment}</div>
+        {uniqueReviews
+          .slice(startIndex, startIndex + reviewsToShow)
+          .map((review, index) => (
+            <div className="article" key={index}>
+              <img
+                src={`/images/reviewImage/${review.review_imgUrl1}`}
+                alt=""
+              />
+              <div className="star_box">
+                {[...Array(5)].map((_, i) => (
+                  <p style={{ cursor: "inherit" }} key={i}>
+                    {review.star_point > i ? "★" : "☆"}
+                  </p>
+                ))}
               </div>
-            );
-          })}
+              <div className="comment_box">{review.review_comment}</div>
+            </div>
+          ))}
+      </div>
+      <div className="controls">
+        <button onClick={handlePrev} disabled={startIndex === 0}>
+          {"<"}
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={startIndex + reviewsToShow >= uniqueReviews.length}
+        >
+          {">"}
+        </button>
       </div>
     </div>
   );
