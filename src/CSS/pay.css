@@ -283,13 +283,26 @@
 }
 .pay_s3 .coupon_box {
   width: 12%;
-  border: 1px solid red;
+  margin-top: 1vw;
   margin-left: auto;
+  cursor: pointer;
+}
+.pay_s3 .coupon_box p {
+  text-align: right;
+}
+.pay_s3 .coupon_box p span {
+  font-size: 1.7vw;
+}
+.pay_s3 .coupon_box .empty {
+  font-size: 1.4vw;
 }
 .pay_s3 .sale_price_box {
   width: 12%;
+  margin-top: 0.5vw;
   margin-left: auto;
-  border: 1px solid blue;
+}
+.pay_s3 .sale_price_box p {
+  text-align: right;
 }
 /* payModal */
 /* modal_background */

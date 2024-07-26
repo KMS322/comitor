@@ -12,17 +12,21 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
   const location = useLocation();
   console.log("location : ", location);
   const noCouponPrice =
-    location.state && location.state.selectedProduct.product_salePrice;
-  const noCouponCnt = location.state && location.state.selectedCnt;
+    location.state.selectedProduct &&
+    location.state.selectedProduct.product_salePrice;
+  const noCouponCnt =
+    location.state.selectedProduct && location.state.selectedCnt;
   console.log("noCouponPrice : ", noCouponPrice);
   console.log("noCouponCnt : ", noCouponCnt);
   const { products } = useSelector((state) => state.adminProduct);
   const { coupons } = useSelector((state) => state.coupon);
   const { me } = useSelector((state) => state.user);
+  console.log("me : ", me);
   const selectedProduct = location.state && location.state.selectedProduct;
   const selectedCnt = location.state && location.state.selectedCnt;
   const [totalPrice, setTotalPrice] = useState(0);
   const [salePrice, setSalePrice] = useState(0);
+  console.log("salePrice : ", salePrice);
   const [onCoupon, setOnCoupon] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [orderData, setOrderData] = useState();
@@ -118,7 +122,12 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
                       </p>
                     </div>
                     <p>{cart.product_cnt}</p>
-                    <p>{price ? "1개" : "없음"}</p>
+                    <p>
+                      {" "}
+                      {me && me.user_coupon && coupons[0].coupon_name
+                        ? "1개"
+                        : "없음"}
+                    </p>
                     <p>무료</p>
                     <p>
                       {price
@@ -136,13 +145,30 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
                 );
               })}
             <div className="coupon_box">
-              <p
+              {/* <p
                 onClick={() => {
                   addSale();
                 }}
               >
                 {onCoupon ? "쿠폰 사용 ●" : "쿠폰 사용 ○"}
-              </p>
+              </p> */}
+              {onCoupon ? (
+                <p
+                  onClick={() => {
+                    addSale();
+                  }}
+                >
+                  쿠폰 사용 <span>●</span>
+                </p>
+              ) : (
+                <p
+                  onClick={() => {
+                    addSale();
+                  }}
+                >
+                  쿠폰 사용 <span className="empty">○</span>
+                </p>
+              )}
             </div>
             {onCoupon ? (
               <div className="sale_price_box">
@@ -155,8 +181,8 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
             <div className="total_price_box">
               <p>총 결제금액</p>
               <p>
-                {price
-                  ? (totalPrice - price).toLocaleString()
+                {onCoupon
+                  ? (totalPrice - salePrice).toLocaleString()
                   : totalPrice.toLocaleString()}
                 원
               </p>
@@ -311,14 +337,26 @@ const PayS3 = ({ carts, deliveryInfo, price }) => {
             <div className="total_price_box">
               <p>총 결제금액</p>
               <p>
-                {salePrice
+                {carts
+                  ? salePrice
+                    ? (
+                        selectedProduct.product_salePrice * selectedCnt -
+                        salePrice
+                      ).toLocaleString()
+                    : (
+                        selectedProduct.product_salePrice * selectedCnt
+                      ).toLocaleString()
+                  : onCoupon
+                  ? salePrice
+                  : noCouponPrice * noCouponCnt}
+                {/* {salePrice
                   ? (
                       selectedProduct.product_salePrice * selectedCnt -
                       salePrice
                     ).toLocaleString()
                   : (
                       selectedProduct.product_salePrice * selectedCnt
-                    ).toLocaleString()}
+                    ).toLocaleString()} */}
                 원
               </p>
             </div>

@@ -17,6 +17,7 @@ const MypageS2 = ({ userId }) => {
   const [uniqueProducts, setUniqueProducts] = useState([]);
   const [uniqueReviews, setUniqueReviews] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  console.log("userProducts : ", userProducts);
   console.log("uniqueReviews1 : ", uniqueReviews);
   console.log("userReviews : ", userReviews);
   console.log("userId : ", userId);
@@ -30,18 +31,19 @@ const MypageS2 = ({ userId }) => {
       type: LOAD_USER_ORDER_REQUEST,
       data: { userId },
     });
-  }, [dispatch]);
+  }, [dispatch, userId]);
   useEffect(() => {
     dispatch({
       type: LOAD_PRODUCT_REQUEST,
     });
-  }, [dispatch]);
+  }, [dispatch, userId]);
   useEffect(() => {
+    console.log("aa");
     dispatch({
       type: LOAD_REVIEW_REQUEST,
       data: { userId },
     });
-  }, [dispatch]);
+  }, [dispatch, userId]);
   useEffect(() => {
     const removeDuplicatesById = (lists) => {
       if (!lists || !Array.isArray(lists)) {

@@ -9,32 +9,11 @@ const MypageContents = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
   const { carts } = useSelector((state) => state.cart);
-  const [uniquecarts, setUniquecarts] = useState([]);
 
   const userId = me && me.user_id;
   console.log("me : ", me);
   console.log("content 속 id : ", userId);
 
-  useEffect(() => {
-    const removeDuplicatesById = (lists) => {
-      if (!lists || !Array.isArray(lists)) {
-        return [];
-      }
-      const uniqueLists = [];
-      const existingIds = [];
-
-      for (const list of lists) {
-        if (list && list.id && !existingIds.includes(list.id)) {
-          uniqueLists.push(list);
-          existingIds.push(list.id);
-        }
-      }
-
-      return uniqueLists;
-    };
-
-    setUniquecarts(removeDuplicatesById(carts));
-  }, [carts]);
   return (
     <>
       <MypageS1 me={me} />

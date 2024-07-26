@@ -61,6 +61,13 @@ const AdminMain = () => {
         >
           리뷰 목록
         </p>
+        <p
+          onClick={() => {
+            navigate("/adminStatistics", { state: { me } });
+          }}
+        >
+          통계
+        </p>
         {/* <p
           onClick={() => {
             navigate("/adminPopup", { state: { me } });

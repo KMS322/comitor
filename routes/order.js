@@ -102,6 +102,7 @@ router.post("/loadUser", async (req, res, next) => {
     }, []);
     // const sendOrder = { orderLists, orderProducts };
     // console.log("sendOrder : ", sendOrder);
+    console.log("orderProducts : ", orderProducts);
     res.status(200).json(orderProducts);
   } catch (error) {
     console.error(error);

@@ -1,0 +1,8 @@
+/* adminStatisticsMonth */
+.statisticsMonth {
+  width: 1005;
+  height: auto;
+}
+.statisticsMonth > p {
+  font-size: 1.5vw;
+}
